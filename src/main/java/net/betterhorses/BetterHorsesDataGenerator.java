@@ -1,4 +1,4 @@
-package net.betterhorses.client;
+package net.betterhorses;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;

@@ -1,6 +1,5 @@
-package net.betterhorses.client;
+package net.betterhorses;
 
-import net.betterhorses.BetterHorses;
 import net.betterhorses.breed.BreedableHorse;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
