@@ -4,6 +4,7 @@
   "package": "net.betterhorses.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "MixinHorseEntity"
   ],
   "client": [
   ],
