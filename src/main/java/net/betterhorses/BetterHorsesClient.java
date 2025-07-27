@@ -1,6 +1,7 @@
 package net.betterhorses;
 
 import net.betterhorses.breed.BreedableHorse;
+import net.betterhorses.progress.ProgressableHorse;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;
@@ -34,10 +35,13 @@ public class BetterHorsesClient implements ClientModInitializer {
             double jumpHeight = getJumpHeight(horse.getAttributeInstance(EntityAttributes.JUMP_STRENGTH).getValue());
 
             var breed = ((BreedableHorse) horse).getHorseBreed();
+            var progress = ((ProgressableHorse) horse).getProgress();
 
             context.drawText(textRenderer, Text.literal("Скорость: " + speed + " б/с"), x, y, 0xFFFFFF, false);
             context.drawText(textRenderer, Text.literal("Прыжок: " + jumpHeight + " б"), x, y + 10, 0xFFFFFF, false);
             context.drawText(textRenderer, Text.literal("Парода : " + breed.displayName()), x, y + 20, 0xFFFFFF, false);
+            context.drawText(textRenderer, Text.literal("Прогресс. Дистанция : " + progress.getRunningDistance()), x, y + 30, 0xFFFFFF, false);
+            context.drawText(textRenderer, Text.literal("Прогресс. Количество прыжков : " + progress.getJumpCount()), x, y + 40, 0xFFFFFF, false);
         }
     }
 

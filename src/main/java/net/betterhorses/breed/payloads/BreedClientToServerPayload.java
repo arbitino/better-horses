@@ -7,7 +7,6 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 
-// Пакет запроса (клиент → сервер)
 public record BreedClientToServerPayload(int entityId, NbtCompound breedData) implements CustomPayload {
     public static final Id<BreedClientToServerPayload> ID = new Id<>(Identifier.of(BetterHorses.MOD_ID, "request_breed_update"));
 

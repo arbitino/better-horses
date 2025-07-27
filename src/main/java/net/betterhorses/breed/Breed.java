@@ -9,6 +9,8 @@ public record Breed(
         float maxSpeed,
         ObedienceLevel obedience
 ) {
+    public static final String KEY = "HorseBreed";
+
     public enum ObedienceLevel {
         VERY_OBEDIENT(1),  // Очень послушная
         NORMAL(2),         // Обычная
