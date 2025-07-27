@@ -3,12 +3,8 @@ package net.betterhorses.mixin;
 import net.betterhorses.breed.BreedableHorse;
 import net.betterhorses.breed.Breed;
 import net.betterhorses.breed.BreedRegistry;
-import net.betterhorses.breed.payloads.BreedServerToClientPayload;
 import net.betterhorses.progress.Progress;
 import net.betterhorses.progress.ProgressableHorse;
-import net.betterhorses.progress.payloads.ProgressServerToClientPayload;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -96,23 +92,6 @@ public abstract class MixinHorseEntity extends AnimalEntity implements Breedable
     }
 
     @Override
-    public void onTrackedDataSet(TrackedData<?> data) {
-        super.onTrackedDataSet(data);
-
-        if (this.getWorld().isClient()) {
-            return;
-        }
-
-        if (data.equals(HORSE_BREED)) {
-            this.syncBreedToClients();
-        }
-
-        if (data.equals(HORSE_PROGRESS)) {
-            this.syncProgressToClients();
-        }
-    }
-
-    @Override
     public Progress getProgress() {
         return Progress.fromNbt(this.dataTracker.get(HORSE_PROGRESS));
     }
@@ -120,25 +99,5 @@ public abstract class MixinHorseEntity extends AnimalEntity implements Breedable
     @Override
     public void setProgress(Progress progress) {
         this.dataTracker.set(HORSE_PROGRESS, progress.toNbt());
-    }
-
-    @Unique
-    private void syncBreedToClients() {
-        NbtCompound breedData = this.dataTracker.get(HORSE_BREED);
-        BreedServerToClientPayload packet = new BreedServerToClientPayload(this.getId(), breedData);
-
-        PlayerLookup.tracking(this).forEach(player -> {
-            ServerPlayNetworking.send(player, packet);
-        });
-    }
-
-    @Unique
-    private void syncProgressToClients() {
-        NbtCompound progressData = this.dataTracker.get(HORSE_PROGRESS);
-        ProgressServerToClientPayload packet = new ProgressServerToClientPayload(this.getId(), progressData);
-
-        PlayerLookup.tracking(this).forEach(player -> {
-            ServerPlayNetworking.send(player, packet);
-        });
     }
 }

@@ -1,6 +1,5 @@
 package net.betterhorses;
 
-import net.betterhorses.network.BetterHorsesPayloads;
 import net.betterhorses.breed.BreedEvents;
 import net.betterhorses.breed.BreedRegistry;
 import net.betterhorses.progress.ProgressEvents;
@@ -18,7 +17,5 @@ public class BetterHorses implements ModInitializer {
         BreedEvents.init();
 
         ProgressEvents.init();
-
-        BetterHorsesPayloads.register();
     }
 }
