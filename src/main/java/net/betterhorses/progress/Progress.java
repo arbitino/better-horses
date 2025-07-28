@@ -1,6 +1,5 @@
 package net.betterhorses.progress;
 
-import net.betterhorses.BetterHorses;
 import net.minecraft.nbt.NbtCompound;
 
 public class Progress {
@@ -45,12 +44,9 @@ public class Progress {
 
     public void addDistance(long distance) {
         this.runningDistance += distance;
-        BetterHorses.LOGGER.info("Пройденная дистанция: {}", this.runningDistance);
     }
 
     public void addJump() {
         this.jumps++;
-
-        BetterHorses.LOGGER.info("Количество прыжков: {}", this.jumps);
     }
 }
