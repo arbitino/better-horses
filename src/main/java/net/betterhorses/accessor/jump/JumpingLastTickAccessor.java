@@ -1,6 +1,6 @@
-package net.betterhorses.accessor;
+package net.betterhorses.accessor.jump;
 
-public interface JumpingTracker {
+public interface JumpingLastTickAccessor {
     boolean wasJumpingLastTick();
     void setWasJumpingLastTick(boolean value);
 }

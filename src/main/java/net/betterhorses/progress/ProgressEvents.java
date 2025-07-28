@@ -1,7 +1,7 @@
 package net.betterhorses.progress;
 
-import net.betterhorses.accessor.JumpingAccessor;
-import net.betterhorses.accessor.JumpingTracker;
+import net.betterhorses.accessor.jump.IsJumpingAccessor;
+import net.betterhorses.accessor.jump.JumpingLastTickAccessor;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.math.Vec3d;
@@ -32,8 +32,8 @@ public class ProgressEvents {
     }
 
     private static void setHorseJumps(HorseEntity horse) {
-        JumpingTracker tracker = (JumpingTracker) horse;
-        JumpingAccessor jumpingAccessor = (JumpingAccessor) horse;
+        JumpingLastTickAccessor tracker = (JumpingLastTickAccessor) horse;
+        IsJumpingAccessor jumpingAccessor = (IsJumpingAccessor) horse;
         Progress progress = ((ProgressableHorse) horse).getProgress();
 
         boolean currentlyJumping = jumpingAccessor.isJumping();

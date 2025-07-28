@@ -1,14 +1,14 @@
 package net.betterhorses.mixin;
 
-import net.betterhorses.accessor.JumpingAccessor;
-import net.betterhorses.accessor.JumpingTracker;
+import net.betterhorses.accessor.jump.IsJumpingAccessor;
+import net.betterhorses.accessor.jump.JumpingLastTickAccessor;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(AbstractHorseEntity.class)
-public class AbstractHorseEntityAccessorMixin implements JumpingTracker, JumpingAccessor {
+public class AbstractHorseEntityAccessorMixinIs implements JumpingLastTickAccessor, IsJumpingAccessor {
     @Shadow
     protected boolean jumping;
 

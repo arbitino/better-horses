@@ -21,20 +21,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HorseEntity.class)
-public abstract class MixinHorseEntity extends AnimalEntity implements BreedableHorse, ProgressableHorse {
+public abstract class HorseEntityMixin extends AnimalEntity implements BreedableHorse, ProgressableHorse {
     @Unique
     private static final TrackedData<NbtCompound> HORSE_BREED = DataTracker.registerData(
-        MixinHorseEntity.class,
+        HorseEntityMixin.class,
         TrackedDataHandlerRegistry.NBT_COMPOUND
     );
 
     @Unique
     private static final TrackedData<NbtCompound> HORSE_PROGRESS = DataTracker.registerData(
-        MixinHorseEntity.class,
+        HorseEntityMixin.class,
         TrackedDataHandlerRegistry.NBT_COMPOUND
     );
 
-    protected MixinHorseEntity(EntityType<? extends AnimalEntity> entityType, World world) {
+    protected HorseEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 
