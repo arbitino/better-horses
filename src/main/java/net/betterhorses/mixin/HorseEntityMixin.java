@@ -29,28 +29,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HorseEntity.class)
 public abstract class HorseEntityMixin extends AnimalEntity implements BreedableHorse, ProgressableHorse, JumpingHeightAccessor, MoveSpeedAccessor {
+
     @Unique
     private static final TrackedData<NbtCompound> HORSE_BREED = DataTracker.registerData(
-        HorseEntityMixin.class,
-        TrackedDataHandlerRegistry.NBT_COMPOUND
+            HorseEntityMixin.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND
     );
 
     @Unique
     private static final TrackedData<NbtCompound> HORSE_PROGRESS = DataTracker.registerData(
-        HorseEntityMixin.class,
-        TrackedDataHandlerRegistry.NBT_COMPOUND
+            HorseEntityMixin.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND
     );
 
     @Unique
-    private static final TrackedData<Float> CUSTOM_BASE_SPEED = DataTracker.registerData(
-        HorseEntityMixin.class,
-        TrackedDataHandlerRegistry.FLOAT
+    private static final TrackedData<NbtCompound> CUSTOM_BASE_SPEED = DataTracker.registerData(
+            HorseEntityMixin.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND
     );
 
     @Unique
-    private static final TrackedData<Float> CUSTOM_BASE_JUMP = DataTracker.registerData(
-        HorseEntityMixin.class,
-        TrackedDataHandlerRegistry.FLOAT
+    private static final TrackedData<NbtCompound> CUSTOM_BASE_JUMP = DataTracker.registerData(
+            HorseEntityMixin.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND
     );
 
     @Unique
@@ -111,16 +112,16 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Override
     public void setBaseJumpStrength(double value) {
-        if (this.getWorld().isClient()) {
-            return;
+        if (this.getWorld().isClient()) return;
+
+        EntityAttributeInstance jumpAttr = this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH);
+        if (jumpAttr != null) {
+            jumpAttr.setBaseValue(value);
         }
 
-        EntityAttributeInstance jumpStrengthAttribute = this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH);
-        if (jumpStrengthAttribute != null) {
-            jumpStrengthAttribute.setBaseValue(value);
-        }
-
-        this.dataTracker.set(CUSTOM_BASE_JUMP, (float)value);
+        NbtCompound nbt = new NbtCompound();
+        nbt.putDouble(CUSTOM_JUMP_KEY, value);
+        this.dataTracker.set(CUSTOM_BASE_JUMP, nbt);
     }
 
     /* ------------------- SPEED ------------------- */
@@ -137,15 +138,16 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Override
     public void setBaseMoveSpeed(double value) {
-        if (this.getWorld().isClient()) {
-            return;
+        if (this.getWorld().isClient()) return;
+
+        EntityAttributeInstance speedAttr = this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
+        if (speedAttr != null) {
+            speedAttr.setBaseValue(value);
         }
 
-        EntityAttributeInstance speedAttribute = this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
-        if (speedAttribute != null) {
-            speedAttribute.setBaseValue(value);
-        }
-        this.dataTracker.set(CUSTOM_BASE_SPEED, (float)value);
+        NbtCompound nbt = new NbtCompound();
+        nbt.putDouble(CUSTOM_SPEED_KEY, value);
+        this.dataTracker.set(CUSTOM_BASE_SPEED, nbt);
     }
 
     /* ------------------- INIT TRACKER ------------------- */
@@ -154,28 +156,36 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
     private void initDataTrackerInject(DataTracker.Builder builder, CallbackInfo ci) {
         builder.add(HORSE_BREED, BreedRegistry.getRandomBreed().toNbt());
         builder.add(HORSE_PROGRESS, Progress.empty().toNbt());
-        builder.add(CUSTOM_BASE_SPEED, (float)0.0); // временно
-        builder.add(CUSTOM_BASE_JUMP, (float)0.0); // временно
+
+        NbtCompound speedNbt = new NbtCompound();
+        speedNbt.putDouble(CUSTOM_SPEED_KEY, 0.0);
+        builder.add(CUSTOM_BASE_SPEED, speedNbt);
+
+        NbtCompound jumpNbt = new NbtCompound();
+        jumpNbt.putDouble(CUSTOM_JUMP_KEY, 0.0);
+        builder.add(CUSTOM_BASE_JUMP, jumpNbt);
     }
 
     /* ------------------- ATTRIBUTES INIT ------------------- */
 
     @Inject(method = "initAttributes", at = @At("TAIL"))
     private void onInitAttributes(Random random, CallbackInfo ci) {
+        // Speed
         double baseSpeed = this.getBaseMoveSpeed();
-
-        if (this.dataTracker.get(CUSTOM_BASE_SPEED) <= 0.0) {
-            this.dataTracker.set(CUSTOM_BASE_SPEED, (float)baseSpeed);
+        double savedSpeed = this.dataTracker.get(CUSTOM_BASE_SPEED).getDouble(CUSTOM_SPEED_KEY);
+        if (savedSpeed <= 0.0) {
+            setBaseMoveSpeed(baseSpeed);
         } else {
-            this.setBaseMoveSpeed(this.dataTracker.get(CUSTOM_BASE_SPEED));
+            setBaseMoveSpeed(savedSpeed);
         }
 
-        double baseJumpStrength = this.getBaseJumpStrength();
-
-        if (this.dataTracker.get(CUSTOM_BASE_JUMP) <= 0.0) {
-            this.dataTracker.set(CUSTOM_BASE_JUMP, (float)baseJumpStrength);
+        // Jump
+        double baseJump = this.getBaseJumpStrength();
+        double savedJump = this.dataTracker.get(CUSTOM_BASE_JUMP).getDouble(CUSTOM_JUMP_KEY);
+        if (savedJump <= 0.0) {
+            setBaseJumpStrength(baseJump);
         } else {
-            this.setBaseJumpStrength(this.dataTracker.get(CUSTOM_BASE_JUMP));
+            setBaseJumpStrength(savedJump);
         }
     }
 
@@ -186,49 +196,39 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
         nbt.put(Breed.KEY, this.dataTracker.get(HORSE_BREED));
         nbt.put(Progress.KEY, this.dataTracker.get(HORSE_PROGRESS));
 
-        double speed = this.dataTracker.get(CUSTOM_BASE_SPEED);
-        nbt.putDouble(CUSTOM_SPEED_KEY, speed);
-
-        double jumpStrength = this.dataTracker.get(CUSTOM_BASE_JUMP);
-        nbt.putDouble(CUSTOM_JUMP_KEY, jumpStrength);
+        nbt.putDouble(CUSTOM_SPEED_KEY,
+                this.dataTracker.get(CUSTOM_BASE_SPEED).getDouble(CUSTOM_SPEED_KEY));
+        nbt.putDouble(CUSTOM_JUMP_KEY,
+                this.dataTracker.get(CUSTOM_BASE_JUMP).getDouble(CUSTOM_JUMP_KEY));
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustomData(NbtCompound nbt, CallbackInfo ci) {
+        // Breed
         if (nbt.contains(Breed.KEY, NbtElement.COMPOUND_TYPE)) {
             this.dataTracker.set(HORSE_BREED, nbt.getCompound(Breed.KEY));
         } else if (!this.getWorld().isClient()) {
             Breed breed = BreedRegistry.getRandomBreed();
-
-            if (breed != null) {
-                this.setHorseBreed(breed);
-            }
+            if (breed != null) setHorseBreed(breed);
         }
 
+        // Progress
         if (nbt.contains(Progress.KEY, NbtElement.COMPOUND_TYPE)) {
             this.dataTracker.set(HORSE_PROGRESS, nbt.getCompound(Progress.KEY));
         } else {
             this.dataTracker.set(HORSE_PROGRESS, Progress.empty().toNbt());
         }
 
+        // Speed
         if (nbt.contains(CUSTOM_SPEED_KEY, NbtElement.DOUBLE_TYPE)) {
             double savedSpeed = nbt.getDouble(CUSTOM_SPEED_KEY);
-            this.dataTracker.set(CUSTOM_BASE_SPEED, (float)savedSpeed);
-
-            EntityAttributeInstance speedAttribute = this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
-            if (speedAttribute != null) {
-                speedAttribute.setBaseValue(savedSpeed);
-            }
+            setBaseMoveSpeed(savedSpeed);
         }
 
+        // Jump
         if (nbt.contains(CUSTOM_JUMP_KEY, NbtElement.DOUBLE_TYPE)) {
-            double savedJumpStrength = nbt.getDouble(CUSTOM_JUMP_KEY);
-            this.dataTracker.set(CUSTOM_BASE_SPEED, (float)savedJumpStrength);
-
-            EntityAttributeInstance jumpAttribute = this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH);
-            if (jumpAttribute != null) {
-                jumpAttribute.setBaseValue(savedJumpStrength);
-            }
+            double savedJump = nbt.getDouble(CUSTOM_JUMP_KEY);
+            setBaseJumpStrength(savedJump);
         }
     }
 
