@@ -152,7 +152,7 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     private void initDataTrackerInject(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(HORSE_BREED, BreedRegistry.getDefault().toNbt());
+        builder.add(HORSE_BREED, BreedRegistry.getRandomBreed().toNbt());
         builder.add(HORSE_PROGRESS, Progress.empty().toNbt());
         builder.add(CUSTOM_BASE_SPEED, (float)0.0); // временно
         builder.add(CUSTOM_BASE_JUMP, (float)0.0); // временно
@@ -198,7 +198,8 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
         if (nbt.contains(Breed.KEY, NbtElement.COMPOUND_TYPE)) {
             this.dataTracker.set(HORSE_BREED, nbt.getCompound(Breed.KEY));
         } else if (!this.getWorld().isClient()) {
-            Breed breed = BreedRegistry.get("default");
+            Breed breed = BreedRegistry.getRandomBreed();
+
             if (breed != null) {
                 this.setHorseBreed(breed);
             }
