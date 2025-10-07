@@ -21,8 +21,6 @@ import net.minecraft.util.Identifier;
 public class BetterHorsesClient implements ClientModInitializer {
     private static final Identifier STATS_LAYER = Identifier.of(BetterHorses.MOD_ID, "hud_stats_layer");
 
-
-
     @Override
     public void onInitializeClient() {
         HudLayerRegistrationCallback.EVENT.register(layeredDrawer -> layeredDrawer.attachLayerBefore(IdentifiedLayer.CHAT, STATS_LAYER, BetterHorsesClient::render));
@@ -40,8 +38,8 @@ public class BetterHorsesClient implements ClientModInitializer {
             MoveSpeedAccessor accessor = (MoveSpeedAccessor) horse;
             JumpingHeightAccessor jAccessor = (JumpingHeightAccessor) horse;
 
-            double speed = accessor.getBaseMoveSpeed();
-            double jumpHeight = jAccessor.getJumpHeight();
+            double speed = accessor.getMoveSpeedInBlocks();
+            double jumpHeight = jAccessor.getJumpHeightInBlocks();
 
             Breed breed = ((BreedableHorse) horse).getHorseBreed();
             Progress progress = ((ProgressableHorse) horse).getProgress();

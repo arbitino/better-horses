@@ -27,6 +27,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
+
 @Mixin(HorseEntity.class)
 public abstract class HorseEntityMixin extends AnimalEntity implements BreedableHorse, ProgressableHorse, JumpingHeightAccessor, MoveSpeedAccessor {
 
@@ -92,22 +94,22 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Override
     public double getBaseJumpStrength() {
-        return this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH).getBaseValue();
+        return Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH)).getBaseValue();
     }
 
     @Override
     public double getJumpStrength() {
-        return this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH).getValue();
+        return Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.JUMP_STRENGTH)).getValue();
     }
 
     @Override
-    public double getBaseJumpHeight() {
-        return this.calcJumpHeight(this.getBaseJumpStrength());
+    public double getBaseJumpHeightInBlocks() {
+        return this.calcJumpHeightInBlocks(this.getBaseJumpStrength());
     }
 
     @Override
-    public double getJumpHeight() {
-        return this.calcJumpHeight(this.getJumpStrength());
+    public double getJumpHeightInBlocks() {
+        return this.calcJumpHeightInBlocks(this.getJumpStrength());
     }
 
     @Override
@@ -134,6 +136,16 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
     @Override
     public double getMoveSpeed() {
         return this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
+    }
+
+    @Override
+    public double getBaseMoveSpeedInBlocks() {
+        return this.calcMoveSpeedInBlocks(this.getBaseMoveSpeed());
+    }
+
+    @Override
+    public double getMoveSpeedInBlocks() {
+        return this.calcMoveSpeedInBlocks(this.getMoveSpeed());
     }
 
     @Override
@@ -235,7 +247,15 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
     /* ------------------- UTILS ------------------- */
 
     @Unique
-    private double calcJumpHeight(double value) {
-        return -0.1817584952 * value * value + 3.689713992 * value + 0.4842167484;
+    private double calcJumpHeightInBlocks(double value) {
+        return - 0.1817584952 * (Math.pow(value, 3))
+                + 3.689713992 * (Math.pow(value, 2))
+                + 2.128599134 * value
+                - 0.343930367;
+    }
+
+    @Unique
+    private double calcMoveSpeedInBlocks(double value) {
+        return value  * 42.157796;
     }
 }

@@ -5,6 +5,7 @@ public interface JumpingHeightAccessor {
 
     double getBaseJumpStrength();
     double getJumpStrength();
-    double getBaseJumpHeight();
-    double getJumpHeight();
+
+    double getBaseJumpHeightInBlocks();
+    double getJumpHeightInBlocks();
 }
