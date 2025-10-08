@@ -8,6 +8,7 @@ import net.betterhorses.common.breed.BreedRegistry;
 import net.betterhorses.common.progress.Progress;
 import net.betterhorses.common.progress.ProgressableHorse;
 
+import net.betterhorses.common.util.MathUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -104,12 +105,12 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Override
     public double getBaseJumpHeightInBlocks() {
-        return this.calcJumpHeightInBlocks(this.getBaseJumpStrength());
+        return MathUtils.calcJumpHeightValueInBlocks(this.getBaseJumpStrength());
     }
 
     @Override
     public double getJumpHeightInBlocks() {
-        return this.calcJumpHeightInBlocks(this.getJumpStrength());
+        return MathUtils.calcJumpHeightValueInBlocks(this.getJumpStrength());
     }
 
     @Override
@@ -140,12 +141,12 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Override
     public double getBaseMoveSpeedInBlocks() {
-        return this.calcMoveSpeedInBlocks(this.getBaseMoveSpeed());
+        return MathUtils.calcMoveSpeedValueInBlocks(this.getBaseMoveSpeed());
     }
 
     @Override
     public double getMoveSpeedInBlocks() {
-        return this.calcMoveSpeedInBlocks(this.getMoveSpeed());
+        return MathUtils.calcMoveSpeedValueInBlocks(this.getMoveSpeed());
     }
 
     @Override
@@ -242,20 +243,5 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
             double savedJump = nbt.getDouble(CUSTOM_JUMP_KEY);
             setBaseJumpStrength(savedJump);
         }
-    }
-
-    /* ------------------- UTILS ------------------- */
-
-    @Unique
-    private double calcJumpHeightInBlocks(double value) {
-        return - 0.1817584952 * (Math.pow(value, 3))
-                + 3.689713992 * (Math.pow(value, 2))
-                + 2.128599134 * value
-                - 0.343930367;
-    }
-
-    @Unique
-    private double calcMoveSpeedInBlocks(double value) {
-        return value  * 42.157796;
     }
 }
