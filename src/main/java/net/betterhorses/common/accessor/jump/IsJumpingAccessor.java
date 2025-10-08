@@ -1,4 +1,4 @@
-package net.betterhorses.accessor.jump;
+package net.betterhorses.common.accessor.jump;
 
 public interface IsJumpingAccessor {
     boolean isJumping();

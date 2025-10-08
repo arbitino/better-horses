@@ -1,4 +1,4 @@
-package net.betterhorses.breed;
+package net.betterhorses.common.breed;
 
 import net.minecraft.nbt.NbtCompound;
 

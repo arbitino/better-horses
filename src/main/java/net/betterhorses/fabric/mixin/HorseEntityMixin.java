@@ -1,12 +1,12 @@
-package net.betterhorses.mixin;
+package net.betterhorses.fabric.mixin;
 
-import net.betterhorses.accessor.jump.JumpingHeightAccessor;
-import net.betterhorses.accessor.speed.MoveSpeedAccessor;
-import net.betterhorses.breed.BreedableHorse;
-import net.betterhorses.breed.Breed;
-import net.betterhorses.breed.BreedRegistry;
-import net.betterhorses.progress.Progress;
-import net.betterhorses.progress.ProgressableHorse;
+import net.betterhorses.common.accessor.jump.JumpingHeightAccessor;
+import net.betterhorses.common.accessor.speed.MoveSpeedAccessor;
+import net.betterhorses.common.breed.BreedableHorse;
+import net.betterhorses.common.breed.Breed;
+import net.betterhorses.common.breed.BreedRegistry;
+import net.betterhorses.common.progress.Progress;
+import net.betterhorses.common.progress.ProgressableHorse;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.EntityAttributeInstance;

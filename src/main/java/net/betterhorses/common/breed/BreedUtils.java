@@ -1,19 +1,10 @@
-package net.betterhorses.breed;
+package net.betterhorses.common.breed;
 
-import net.betterhorses.BetterHorses;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.betterhorses.common.BetterHorses;
 import net.minecraft.entity.passive.HorseEntity;
 
-public class BreedEvents {
-    public static void init() {
-        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
-            if (entity instanceof HorseEntity horse) {
-                assignBreedIfMissing(horse);
-            }
-        });
-    }
-
-    private static void assignBreedIfMissing(HorseEntity horse) {
+public class BreedUtils {
+    public static void assignBreedIfMissing(HorseEntity horse) {
         if (horse instanceof BreedableHorse breedableHorse) {
             var breed = breedableHorse.getHorseBreed();
 

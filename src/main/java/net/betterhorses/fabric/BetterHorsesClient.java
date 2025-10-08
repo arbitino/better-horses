@@ -1,12 +1,13 @@
-package net.betterhorses;
+package net.betterhorses.fabric;
 
-import net.betterhorses.accessor.jump.JumpingHeightAccessor;
-import net.betterhorses.accessor.speed.MoveSpeedAccessor;
-import net.betterhorses.breed.Breed;
-import net.betterhorses.breed.BreedableHorse;
-import net.betterhorses.progress.Progress;
-import net.betterhorses.progress.ProgressableHorse;
-import net.betterhorses.util.MathUtils;
+import net.betterhorses.common.BetterHorses;
+import net.betterhorses.common.accessor.jump.JumpingHeightAccessor;
+import net.betterhorses.common.accessor.speed.MoveSpeedAccessor;
+import net.betterhorses.common.breed.Breed;
+import net.betterhorses.common.breed.BreedableHorse;
+import net.betterhorses.common.progress.Progress;
+import net.betterhorses.common.progress.ProgressableHorse;
+import net.betterhorses.common.util.MathUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudLayerRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.IdentifiedLayer;

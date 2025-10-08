@@ -1,6 +1,5 @@
-package net.betterhorses.breed;
-
-import net.betterhorses.BetterHorses;
+package net.betterhorses.common.breed;
+import net.betterhorses.common.BetterHorses;
 
 import java.util.*;
 

@@ -1,9 +1,16 @@
-package net.betterhorses.progress;
+package net.betterhorses.common.progress;
 
+import net.betterhorses.common.accessor.jump.IsJumpingAccessor;
+import net.betterhorses.common.accessor.jump.JumpingLastTickAccessor;
+import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.Vec3d;
+
+import java.util.UUID;
 
 public class Progress {
     public static final String KEY = "HorseProgress";
+
 
     private long jumps;
     private long runningDistance;

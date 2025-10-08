@@ -11,13 +11,13 @@
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
-      "net.betterhorses.BetterHorsesDataGenerator"
+      "net.betterhorses.fabric.BetterHorsesDataGenerator"
     ],
     "client": [
-      "net.betterhorses.BetterHorsesClient"
+      "net.betterhorses.fabric.BetterHorsesClient"
     ],
     "main": [
-      "net.betterhorses.BetterHorses"
+      "net.betterhorses.fabric.BetterHorses"
     ]
   },
   "mixins": [

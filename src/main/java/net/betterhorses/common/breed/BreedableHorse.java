@@ -1,4 +1,4 @@
-package net.betterhorses.breed;
+package net.betterhorses.common.breed;
 
 public interface BreedableHorse {
     Breed getHorseBreed();

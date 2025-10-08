@@ -1,4 +1,4 @@
-package net.betterhorses.progress;
+package net.betterhorses.common.progress;
 
 public interface ProgressableHorse {
     // Получение прогресса

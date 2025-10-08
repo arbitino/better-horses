@@ -1,4 +1,4 @@
-package net.betterhorses.accessor.speed;
+package net.betterhorses.common.accessor.speed;
 
 public interface MoveSpeedAccessor {
     void setBaseMoveSpeed(double value);
