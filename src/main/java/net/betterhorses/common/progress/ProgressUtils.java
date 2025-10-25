@@ -5,12 +5,12 @@ import net.betterhorses.common.accessor.jump.JumpingLastTickAccessor;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.WeakHashMap;
 
 public class ProgressUtils {
-    private static final Map<UUID, Vec3d> lastHorsePositions = new WeakHashMap<>();
+    private static final Map<UUID, Vec3d> lastHorsePositions = new HashMap<>();
 
     public static void setHorseJumps(HorseEntity horse) {
         JumpingLastTickAccessor tracker = (JumpingLastTickAccessor) horse;
@@ -23,6 +23,8 @@ public class ProgressUtils {
         if (currentlyJumping && !wasJumping) {
             progress.addJump();
             ((ProgressableHorse) horse).setProgress(progress);
+
+            HorseAttributeProgression.updateJumpFromJumps(horse);
         }
 
         tracker.setWasJumpingLastTick(currentlyJumping);
@@ -39,8 +41,15 @@ public class ProgressUtils {
 
             progress.addDistance((long) distance);
             ((ProgressableHorse) horse).setProgress(progress);
+
+            HorseAttributeProgression.updateSpeedFromDistance(horse);
         }
 
         lastHorsePositions.put(horseUuid, currentPos);
+    }
+
+    public static void clearHorseSession(HorseEntity horse) {
+        UUID horseUuid = horse.getUuid();
+        lastHorsePositions.remove(horseUuid);
     }
 }

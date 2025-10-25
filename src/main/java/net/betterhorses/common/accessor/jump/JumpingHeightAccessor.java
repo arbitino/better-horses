@@ -8,4 +8,8 @@ public interface JumpingHeightAccessor {
 
     double getBaseJumpHeightInBlocks();
     double getJumpHeightInBlocks();
+
+    void setInitialJumpStrength(double value);
+    double getInitialJumpStrength();
+    boolean hasInitialJumpStrength();
 }

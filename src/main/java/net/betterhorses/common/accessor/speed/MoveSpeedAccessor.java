@@ -7,4 +7,8 @@ public interface MoveSpeedAccessor {
     double getBaseMoveSpeed();
     double getBaseMoveSpeedInBlocks();
     double getMoveSpeedInBlocks();
+
+    void setInitialMoveSpeed(double value);
+    double getInitialMoveSpeed();
+    boolean hasInitialMoveSpeed();
 }

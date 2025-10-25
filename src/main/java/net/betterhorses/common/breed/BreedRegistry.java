@@ -8,9 +8,9 @@ public class BreedRegistry {
 
     private static final Random RANDOM = new Random();
 
-    private static final Breed ARABIAN = new Breed("arabian", "Арабская", 1.2f, 0.35f, Breed.ObedienceLevel.VERY_OBEDIENT);
-    private static final Breed MUSTANG = new Breed("mustang", "Мустанг", 1.0f, 0.3f, Breed.ObedienceLevel.DISOBEDIENT);
-    private static final Breed DEFAULT = new Breed("default", "Обычная", 0.9f, 0.25f, Breed.ObedienceLevel.NORMAL);
+    private static final Breed ARABIAN = new Breed("arabian", "Арабская", 1.0f, 0.35f, Breed.ObedienceLevel.VERY_OBEDIENT, 1.2f, 0.8f);
+    private static final Breed MUSTANG = new Breed("mustang", "Мустанг", 0.75f, 0.3f, Breed.ObedienceLevel.DISOBEDIENT, 0.9f, 1.3f);
+    private static final Breed DEFAULT = new Breed("default", "Обычная", 0.5f, 0.25f, Breed.ObedienceLevel.NORMAL, 1.0f, 1.0f);
 
     public static void register(Breed breed) {
         REGISTRY.put(breed.id(), breed);

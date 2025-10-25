@@ -9,14 +9,14 @@ public class BreedUtils {
             var breed = breedableHorse.getHorseBreed();
 
             if (breed == null) {
-                Breed defaultBreed = BreedRegistry.get("default");
+                Breed randomBreed = BreedRegistry.getRandomBreed();
 
-                if (defaultBreed != null) {
-                    breedableHorse.setHorseBreed(defaultBreed);
-                    BetterHorses.LOGGER.info("Установлена порода для существующей лошади: {} {}", horse.getUuid(), breedableHorse.getHorseBreed());
+                if (randomBreed != null) {
+                    breedableHorse.setHorseBreed(randomBreed);
+                    BetterHorses.LOGGER.info("Установлена случайная порода для новой лошади: {} {}", horse.getUuid(), randomBreed.id());
                 }
             } else {
-                BetterHorses.LOGGER.info("Существующая парода {} у лошади {}", breed.id(), horse.getUuid());
+                BetterHorses.LOGGER.info("Существующая порода {} у лошади {}", breed.id(), horse.getUuid());
             }
         }
     }

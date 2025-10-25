@@ -9,7 +9,7 @@ import net.minecraft.entity.passive.HorseEntity;
 public class FabricPlatformEvents {
     public static void init() {
         FabricPlatformEvents.initHorseBreedAssignEvent();
-        FabricPlatformEvents.initSaveHorseProgressEvent();
+        FabricPlatformEvents.initHorseProgressEvent();
     }
 
     private static void initHorseBreedAssignEvent() {
@@ -20,7 +20,7 @@ public class FabricPlatformEvents {
         });
     }
 
-    private static void initSaveHorseProgressEvent() {
+    private static void initHorseProgressEvent() {
         ServerTickEvents.START_WORLD_TICK.register(world -> {
             long time = world.getTime();
 
@@ -29,6 +29,7 @@ public class FabricPlatformEvents {
                     var player = horse.getFirstPassenger();
 
                     if (player == null) {
+                        ProgressUtils.clearHorseSession(horse);
                         return;
                     }
 

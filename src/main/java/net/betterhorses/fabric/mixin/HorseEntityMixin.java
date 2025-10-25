@@ -58,10 +58,28 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
     );
 
     @Unique
+    private static final TrackedData<NbtCompound> INITIAL_SPEED = DataTracker.registerData(
+            HorseEntityMixin.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND
+    );
+
+    @Unique
+    private static final TrackedData<NbtCompound> INITIAL_JUMP = DataTracker.registerData(
+            HorseEntityMixin.class,
+            TrackedDataHandlerRegistry.NBT_COMPOUND
+    );
+
+    @Unique
     private static final String CUSTOM_SPEED_KEY = "HorseCustomSpeed";
 
     @Unique
     private static final String CUSTOM_JUMP_KEY = "HorseCustomJump";
+
+    @Unique
+    private static final String INITIAL_SPEED_KEY = "HorseInitialSpeed";
+
+    @Unique
+    private static final String INITIAL_JUMP_KEY = "HorseInitialJump";
 
     protected HorseEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
@@ -71,7 +89,12 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
 
     @Override
     public Breed getHorseBreed() {
-        return Breed.fromNbt(this.dataTracker.get(HORSE_BREED));
+        NbtCompound breedNbt = this.dataTracker.get(HORSE_BREED);
+        if (breedNbt.isEmpty()) {
+            return null;
+        }
+
+        return Breed.fromNbt(breedNbt);
     }
 
     @Override
@@ -163,11 +186,49 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
         this.dataTracker.set(CUSTOM_BASE_SPEED, nbt);
     }
 
+    @Override
+    public void setInitialMoveSpeed(double value) {
+        if (this.getWorld().isClient()) return;
+        
+        NbtCompound nbt = new NbtCompound();
+        nbt.putDouble(INITIAL_SPEED_KEY, value);
+        this.dataTracker.set(INITIAL_SPEED, nbt);
+    }
+
+    @Override
+    public double getInitialMoveSpeed() {
+        return this.dataTracker.get(INITIAL_SPEED).getDouble(INITIAL_SPEED_KEY);
+    }
+
+    @Override
+    public boolean hasInitialMoveSpeed() {
+        return this.dataTracker.get(INITIAL_SPEED).getDouble(INITIAL_SPEED_KEY) > 0.0;
+    }
+
+    @Override
+    public void setInitialJumpStrength(double value) {
+        if (this.getWorld().isClient()) return;
+        
+        NbtCompound nbt = new NbtCompound();
+        nbt.putDouble(INITIAL_JUMP_KEY, value);
+        this.dataTracker.set(INITIAL_JUMP, nbt);
+    }
+
+    @Override
+    public double getInitialJumpStrength() {
+        return this.dataTracker.get(INITIAL_JUMP).getDouble(INITIAL_JUMP_KEY);
+    }
+
+    @Override
+    public boolean hasInitialJumpStrength() {
+        return this.dataTracker.get(INITIAL_JUMP).getDouble(INITIAL_JUMP_KEY) > 0.0;
+    }
+
     /* ------------------- INIT TRACKER ------------------- */
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     private void initDataTrackerInject(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(HORSE_BREED, BreedRegistry.getRandomBreed().toNbt());
+        builder.add(HORSE_BREED, new NbtCompound()); // Пустое значение, порода будет установлена позже
         builder.add(HORSE_PROGRESS, Progress.empty().toNbt());
 
         NbtCompound speedNbt = new NbtCompound();
@@ -177,6 +238,14 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
         NbtCompound jumpNbt = new NbtCompound();
         jumpNbt.putDouble(CUSTOM_JUMP_KEY, 0.0);
         builder.add(CUSTOM_BASE_JUMP, jumpNbt);
+
+        NbtCompound initialSpeedNbt = new NbtCompound();
+        initialSpeedNbt.putDouble(INITIAL_SPEED_KEY, 0.0);
+        builder.add(INITIAL_SPEED, initialSpeedNbt);
+
+        NbtCompound initialJumpNbt = new NbtCompound();
+        initialJumpNbt.putDouble(INITIAL_JUMP_KEY, 0.0);
+        builder.add(INITIAL_JUMP, initialJumpNbt);
     }
 
     /* ------------------- ATTRIBUTES INIT ------------------- */
@@ -200,6 +269,14 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
         } else {
             setBaseJumpStrength(savedJump);
         }
+
+        // Initial values
+        if (!hasInitialMoveSpeed()) {
+            setInitialMoveSpeed(baseSpeed);
+        }
+        if (!hasInitialJumpStrength()) {
+            setInitialJumpStrength(baseJump);
+        }
     }
 
     /* ------------------- SAVE / LOAD ------------------- */
@@ -213,19 +290,19 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
                 this.dataTracker.get(CUSTOM_BASE_SPEED).getDouble(CUSTOM_SPEED_KEY));
         nbt.putDouble(CUSTOM_JUMP_KEY,
                 this.dataTracker.get(CUSTOM_BASE_JUMP).getDouble(CUSTOM_JUMP_KEY));
+
+        nbt.putDouble(INITIAL_SPEED_KEY,
+                this.dataTracker.get(INITIAL_SPEED).getDouble(INITIAL_SPEED_KEY));
+        nbt.putDouble(INITIAL_JUMP_KEY,
+                this.dataTracker.get(INITIAL_JUMP).getDouble(INITIAL_JUMP_KEY));
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustomData(NbtCompound nbt, CallbackInfo ci) {
-        // Breed
         if (nbt.contains(Breed.KEY, NbtElement.COMPOUND_TYPE)) {
             this.dataTracker.set(HORSE_BREED, nbt.getCompound(Breed.KEY));
-        } else if (!this.getWorld().isClient()) {
-            Breed breed = BreedRegistry.getRandomBreed();
-            if (breed != null) setHorseBreed(breed);
         }
 
-        // Progress
         if (nbt.contains(Progress.KEY, NbtElement.COMPOUND_TYPE)) {
             this.dataTracker.set(HORSE_PROGRESS, nbt.getCompound(Progress.KEY));
         } else {
@@ -242,6 +319,17 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
         if (nbt.contains(CUSTOM_JUMP_KEY, NbtElement.DOUBLE_TYPE)) {
             double savedJump = nbt.getDouble(CUSTOM_JUMP_KEY);
             setBaseJumpStrength(savedJump);
+        }
+
+        // Initial values
+        if (nbt.contains(INITIAL_SPEED_KEY, NbtElement.DOUBLE_TYPE)) {
+            double initialSpeed = nbt.getDouble(INITIAL_SPEED_KEY);
+            setInitialMoveSpeed(initialSpeed);
+        }
+
+        if (nbt.contains(INITIAL_JUMP_KEY, NbtElement.DOUBLE_TYPE)) {
+            double initialJump = nbt.getDouble(INITIAL_JUMP_KEY);
+            setInitialJumpStrength(initialJump);
         }
     }
 }

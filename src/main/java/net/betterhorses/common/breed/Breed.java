@@ -7,7 +7,9 @@ public record Breed(
         String displayName,
         float maxJumpHeight,
         float maxSpeed,
-        ObedienceLevel obedience
+        ObedienceLevel obedience,
+        float speedGrowthMultiplier,
+        float jumpGrowthMultiplier
 ) {
     public static final String KEY = "HorseBreed";
 
@@ -27,8 +29,16 @@ public record Breed(
         }
     }
 
-    public int getObedienceLevel() {
-        return obedience.getLevel();
+    public ObedienceLevel getObedience() {
+        return obedience;
+    }
+
+    public float speedGrowthMultiplier() {
+        return speedGrowthMultiplier;
+    }
+
+    public float jumpGrowthMultiplier() {
+        return jumpGrowthMultiplier;
     }
 
     // Сериализация в NBT
@@ -39,6 +49,8 @@ public record Breed(
         nbt.putFloat("maxJumpHeight", maxJumpHeight);
         nbt.putFloat("maxSpeed", maxSpeed);
         nbt.putInt("obedience", obedience.getLevel());
+        nbt.putFloat("speedGrowthMultiplier", speedGrowthMultiplier);
+        nbt.putFloat("jumpGrowthMultiplier", jumpGrowthMultiplier);
         return nbt;
     }
 
@@ -49,6 +61,8 @@ public record Breed(
         float maxJumpHeight = nbt.getFloat("maxJumpHeight");
         float maxSpeed = nbt.getFloat("maxSpeed");
         int obedienceLevel = nbt.getInt("obedience");
+        float speedGrowthMultiplier = nbt.contains("speedGrowthMultiplier") ? nbt.getFloat("speedGrowthMultiplier") : 1.0f;
+        float jumpGrowthMultiplier = nbt.contains("jumpGrowthMultiplier") ? nbt.getFloat("jumpGrowthMultiplier") : 1.0f;
 
         ObedienceLevel obedience = switch (obedienceLevel) {
             case 1 -> ObedienceLevel.VERY_OBEDIENT;
@@ -56,6 +70,6 @@ public record Breed(
             default -> ObedienceLevel.NORMAL;
         };
 
-        return new Breed(id, displayName, maxJumpHeight, maxSpeed, obedience);
+        return new Breed(id, displayName, maxJumpHeight, maxSpeed, obedience, speedGrowthMultiplier, jumpGrowthMultiplier);
     }
 }
