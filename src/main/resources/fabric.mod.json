@@ -18,6 +18,9 @@
     ],
     "main": [
       "net.betterhorses.fabric.BetterHorses"
+    ],
+    "modmenu": [
+      "net.betterhorses.fabric.config.ModMenuIntegration"
     ]
   },
   "mixins": [

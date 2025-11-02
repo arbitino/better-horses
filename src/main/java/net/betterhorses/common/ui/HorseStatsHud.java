@@ -1,9 +1,11 @@
 package net.betterhorses.common.ui;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import net.betterhorses.common.accessor.jump.JumpingHeightAccessor;
 import net.betterhorses.common.accessor.speed.MoveSpeedAccessor;
 import net.betterhorses.common.breed.Breed;
 import net.betterhorses.common.breed.BreedableHorse;
+import net.betterhorses.common.config.BetterHorsesConfig;
 import net.betterhorses.common.progress.Progress;
 import net.betterhorses.common.progress.ProgressableHorse;
 import net.betterhorses.common.progress.HorseAttributeProgression;
@@ -14,32 +16,27 @@ import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.text.Text;
 
 public class HorseStatsHud {
-    private static float fontScale = 0.5f;
-    private static boolean useHumanFriendlyUnits = true;
-    private static boolean showBreed = true;
-    private static boolean showAttributes = true;
-    private static boolean showLevels = true;
-    private static boolean showNextLevelInfo = true;
-    private static boolean showMaxAttributes = true;
-    private static boolean showBaseAttributes = true;
-    private static boolean showTotalProgress = true;
-
     public static void render(DrawContext context, TextRenderer textRenderer, HorseEntity horse) {
-        int baseX = (int) (10 / fontScale);
-        int baseY = (int) (10 / fontScale);
-        int lineHeight = (int) (10 / fontScale);
+        BetterHorsesConfig.HudConfig config = getConfig().hud;
+        
+        int baseX = (int) (10 / config.fontScale);
+        int baseY = (int) (10 / config.fontScale);
+        int lineHeight = (int) (10 / config.fontScale);
 
         context.getMatrices().push();
-        context.getMatrices().scale(fontScale, fontScale, 1.0f);
+        context.getMatrices().scale(config.fontScale, config.fontScale, 1.0f);
 
         HorseStats stats = collectHorseStats(horse);
-        formatUnitsIfNeeded(stats);
-        drawHorseStats(context, textRenderer, stats, baseX, baseY, lineHeight);
+        formatUnitsIfNeeded(stats, config);
+        drawHorseStats(context, textRenderer, stats, baseX, baseY, lineHeight, config);
 
         context.getMatrices().pop();
     }
 
-    // ---------- Сбор данных ----------
+    private static BetterHorsesConfig getConfig() {
+        return AutoConfig.getConfigHolder(BetterHorsesConfig.class).getConfig();
+    }
+
     private static HorseStats collectHorseStats(HorseEntity horse) {
         HorseStats s = new HorseStats();
 
@@ -68,12 +65,11 @@ public class HorseStatsHud {
         return s;
     }
 
-    // ---------- Конвертация единиц ----------
-    private static void formatUnitsIfNeeded(HorseStats s) {
+    private static void formatUnitsIfNeeded(HorseStats s, BetterHorsesConfig.HudConfig config) {
         s.speedUnit = "";
         s.jumpUnit = "";
 
-        if (!useHumanFriendlyUnits) return;
+        if (!config.useHumanFriendlyUnits) return;
 
         s.speed = MathUtils.calcMoveSpeedValueInBlocks(s.speed);
         s.jumpStrength = MathUtils.calcMoveSpeedValueInBlocks(s.jumpStrength);
@@ -86,23 +82,20 @@ public class HorseStatsHud {
         s.jumpUnit = " б";
     }
 
-    // ---------- Основная отрисовка ----------
-    private static void drawHorseStats(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int lineHeight) {
+    private static void drawHorseStats(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int lineHeight, BetterHorsesConfig.HudConfig config) {
         int line = 0;
 
-        line = drawGroupBreed(context, renderer, s, x, y, line, lineHeight);
-        line = drawGroupAttributes(context, renderer, s, x, y, line, lineHeight);
-        line = drawGroupLevels(context, renderer, s, x, y, line, lineHeight);
-        line = drawGroupNextLevelInfo(context, renderer, s, x, y, line, lineHeight);
-        line = drawGroupMaxAttributes(context, renderer, s, x, y, line, lineHeight);
-        line = drawGroupBaseAttributes(context, renderer, s, x, y, line, lineHeight);
-        drawGroupTotalProgress(context, renderer, s, x, y, line, lineHeight);
+        line = drawGroupBreed(context, renderer, s, x, y, line, lineHeight, config);
+        line = drawGroupAttributes(context, renderer, s, x, y, line, lineHeight, config);
+        line = drawGroupLevels(context, renderer, s, x, y, line, lineHeight, config);
+        line = drawGroupNextLevelInfo(context, renderer, s, x, y, line, lineHeight, config);
+        line = drawGroupMaxAttributes(context, renderer, s, x, y, line, lineHeight, config);
+        line = drawGroupBaseAttributes(context, renderer, s, x, y, line, lineHeight, config);
+        drawGroupTotalProgress(context, renderer, s, x, y, line, lineHeight, config);
     }
 
-    // ---------- Группы ----------
-
-    private static int drawGroupBreed(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showBreed) return line;
+    private static int drawGroupBreed(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showBreed) return line;
 
         context.drawText(renderer, Text.literal("Порода: " + s.breed.displayName()), x, y + lineHeight * line, 0xFFFFFF, false);
         line++;
@@ -110,8 +103,8 @@ public class HorseStatsHud {
         return line;
     }
 
-    private static int drawGroupAttributes(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showAttributes) return line;
+    private static int drawGroupAttributes(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showAttributes) return line;
 
         context.drawText(renderer, Text.literal("Скорость: " + MathUtils.round2digits(s.speed) + s.speedUnit), x, y + lineHeight * line, 0xFFFFFF, false);
         line++;
@@ -122,8 +115,8 @@ public class HorseStatsHud {
         return line;
     }
 
-    private static int drawGroupLevels(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showLevels) return line;
+    private static int drawGroupLevels(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showLevels) return line;
 
         context.drawText(renderer, Text.literal("Уровень скорости: " + s.speedLevel + "/10 (" + MathUtils.round2digits(s.speedProgress * 100) + "%)"), x, y + lineHeight * line, 0x00FF00, false);
         line++;
@@ -134,8 +127,8 @@ public class HorseStatsHud {
         return line;
     }
 
-    private static int drawGroupNextLevelInfo(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showNextLevelInfo) return line;
+    private static int drawGroupNextLevelInfo(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showNextLevelInfo) return line;
 
         if (s.speedLevel < 10) {
             context.drawText(renderer, Text.literal("До след. ур. скорости " + (s.speedLevel + 1) + ": " + (int) s.remainingDistance + " блоков"), x, y + lineHeight * line, 0x88FF88, false);
@@ -154,8 +147,8 @@ public class HorseStatsHud {
         return line;
     }
 
-    private static int drawGroupMaxAttributes(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showMaxAttributes) return line;
+    private static int drawGroupMaxAttributes(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showMaxAttributes) return line;
 
         context.drawText(renderer, Text.literal("Макс. скорость: " + MathUtils.round2digits(s.maxSpeed) + s.speedUnit), x, y + lineHeight * line, 0xFFFF00, false);
         line++;
@@ -166,8 +159,8 @@ public class HorseStatsHud {
         return line;
     }
 
-    private static int drawGroupBaseAttributes(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showBaseAttributes) return line;
+    private static int drawGroupBaseAttributes(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showBaseAttributes) return line;
 
         context.drawText(renderer, Text.literal("Ориг. скорость: " + MathUtils.round2digits(s.originalSpeed) + s.speedUnit), x, y + lineHeight * line, 0xCCCCCC, false);
         line++;
@@ -178,8 +171,8 @@ public class HorseStatsHud {
         return line;
     }
 
-    private static void drawGroupTotalProgress(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight) {
-        if (!showTotalProgress) return;
+    private static void drawGroupTotalProgress(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
+        if (!config.showTotalProgress) return;
 
         context.drawText(renderer, Text.literal("Общая дистанция: " + s.progress.getRunningDistance()), x, y + lineHeight * line, 0x888888, false);
         line++;
@@ -187,7 +180,6 @@ public class HorseStatsHud {
         context.drawText(renderer, Text.literal("Общие прыжки: " + s.progress.getJumpCount()), x, y + lineHeight * line, 0x888888, false);
     }
 
-    // ---------- Вспомогательная структура ----------
     private static class HorseStats {
         Breed breed;
         Progress progress;

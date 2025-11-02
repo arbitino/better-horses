@@ -1,0 +1,22 @@
+{
+  "text.autoconfig.betterhorses.title": "Настройки Better Horses",
+  "text.autoconfig.betterhorses.category.hud": "Настройки HUD",
+  "text.autoconfig.betterhorses.option.hud.fontScale": "Масштаб шрифта",
+  "text.autoconfig.betterhorses.option.hud.fontScale.@Tooltip": "Масштаб текста HUD (0.1 - 2.0)",
+  "text.autoconfig.betterhorses.option.hud.useHumanFriendlyUnits": "Понятные единицы измерения",
+  "text.autoconfig.betterhorses.option.hud.useHumanFriendlyUnits.@Tooltip": "Показывать скорость в блоках/секунду и высоту прыжка в блоках",
+  "text.autoconfig.betterhorses.option.hud.showBreed": "Показывать породу",
+  "text.autoconfig.betterhorses.option.hud.showBreed.@Tooltip": "Отображать информацию о породе лошади",
+  "text.autoconfig.betterhorses.option.hud.showAttributes": "Показывать атрибуты",
+  "text.autoconfig.betterhorses.option.hud.showAttributes.@Tooltip": "Отображать текущую скорость и силу прыжка",
+  "text.autoconfig.betterhorses.option.hud.showLevels": "Показывать уровни",
+  "text.autoconfig.betterhorses.option.hud.showLevels.@Tooltip": "Отображать текущие уровни атрибутов и прогресс",
+  "text.autoconfig.betterhorses.option.hud.showNextLevelInfo": "Показывать информацию о следующем уровне",
+  "text.autoconfig.betterhorses.option.hud.showNextLevelInfo.@Tooltip": "Отображать информацию о требованиях для следующего уровня",
+  "text.autoconfig.betterhorses.option.hud.showMaxAttributes": "Показывать максимальные атрибуты",
+  "text.autoconfig.betterhorses.option.hud.showMaxAttributes.@Tooltip": "Отображать максимально возможные атрибуты для данной породы",
+  "text.autoconfig.betterhorses.option.hud.showBaseAttributes": "Показывать базовые атрибуты",
+  "text.autoconfig.betterhorses.option.hud.showBaseAttributes.@Tooltip": "Отображать изначальные атрибуты до тренировки",
+  "text.autoconfig.betterhorses.option.hud.showTotalProgress": "Показывать общий прогресс",
+  "text.autoconfig.betterhorses.option.hud.showTotalProgress.@Tooltip": "Отображать общую пройденную дистанцию и количество прыжков"
+}

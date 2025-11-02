@@ -1,0 +1,22 @@
+{
+  "text.autoconfig.betterhorses.title": "Better Horses Config",
+  "text.autoconfig.betterhorses.category.hud": "HUD Settings",
+  "text.autoconfig.betterhorses.option.hud.fontScale": "Font Scale",
+  "text.autoconfig.betterhorses.option.hud.fontScale.@Tooltip": "Scale of the HUD text (0.1 - 2.0)",
+  "text.autoconfig.betterhorses.option.hud.useHumanFriendlyUnits": "Human Friendly Units",
+  "text.autoconfig.betterhorses.option.hud.useHumanFriendlyUnits.@Tooltip": "Show speed in blocks/second and jump height in blocks",
+  "text.autoconfig.betterhorses.option.hud.showBreed": "Show Breed",
+  "text.autoconfig.betterhorses.option.hud.showBreed.@Tooltip": "Display horse breed information",
+  "text.autoconfig.betterhorses.option.hud.showAttributes": "Show Attributes",
+  "text.autoconfig.betterhorses.option.hud.showAttributes.@Tooltip": "Display current speed and jump strength",
+  "text.autoconfig.betterhorses.option.hud.showLevels": "Show Levels",
+  "text.autoconfig.betterhorses.option.hud.showLevels.@Tooltip": "Display current attribute levels and progress",
+  "text.autoconfig.betterhorses.option.hud.showNextLevelInfo": "Show Next Level Info",
+  "text.autoconfig.betterhorses.option.hud.showNextLevelInfo.@Tooltip": "Display information about next level requirements",
+  "text.autoconfig.betterhorses.option.hud.showMaxAttributes": "Show Max Attributes",
+  "text.autoconfig.betterhorses.option.hud.showMaxAttributes.@Tooltip": "Display maximum possible attributes for this breed",
+  "text.autoconfig.betterhorses.option.hud.showBaseAttributes": "Show Base Attributes",
+  "text.autoconfig.betterhorses.option.hud.showBaseAttributes.@Tooltip": "Display original attributes before training",
+  "text.autoconfig.betterhorses.option.hud.showTotalProgress": "Show Total Progress",
+  "text.autoconfig.betterhorses.option.hud.showTotalProgress.@Tooltip": "Display total distance traveled and jumps made"
+}
