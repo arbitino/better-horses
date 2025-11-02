@@ -1,4 +1,4 @@
-package net.betterhorses.fabric.platform;
+package net.betterhorses.fabric.platform.events;
 
 import net.betterhorses.common.breed.BreedUtils;
 import net.betterhorses.common.progress.ProgressUtils;
@@ -6,10 +6,10 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.passive.HorseEntity;
 
-public class FabricPlatformEvents {
+public class FabricPlatformServerEvents {
     public static void init() {
-        FabricPlatformEvents.initHorseBreedAssignEvent();
-        FabricPlatformEvents.initHorseProgressEvent();
+        FabricPlatformServerEvents.initHorseBreedAssignEvent();
+        FabricPlatformServerEvents.initHorseProgressEvent();
     }
 
     private static void initHorseBreedAssignEvent() {

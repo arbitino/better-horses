@@ -88,17 +88,6 @@ public class HorseAttributeProgression {
         return Math.max(0.0, Math.min(1.0, (jumpProgress - current) / (next - current)));
     }
 
-    public static double getOriginalSpeed(HorseEntity horse) {
-        MoveSpeedAccessor speedAccessor = (MoveSpeedAccessor) horse;
-        return speedAccessor.hasInitialMoveSpeed() ? speedAccessor.getInitialMoveSpeed() : 0.0;
-    }
-
-    public static double getOriginalJump(HorseEntity horse) {
-        JumpingHeightAccessor jumpAccessor = (JumpingHeightAccessor) horse;
-        return jumpAccessor.hasInitialJumpStrength() ? jumpAccessor.getInitialJumpStrength() : 0.0;
-    }
-
-
     public static double getRemainingDistanceForNextSpeedLevel(HorseEntity horse) {
         int level = getSpeedLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;

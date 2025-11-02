@@ -127,16 +127,6 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
     }
 
     @Override
-    public double getBaseJumpHeightInBlocks() {
-        return MathUtils.calcJumpHeightValueInBlocks(this.getBaseJumpStrength());
-    }
-
-    @Override
-    public double getJumpHeightInBlocks() {
-        return MathUtils.calcJumpHeightValueInBlocks(this.getJumpStrength());
-    }
-
-    @Override
     public void setBaseJumpStrength(double value) {
         if (this.getWorld().isClient()) return;
 
@@ -160,16 +150,6 @@ public abstract class HorseEntityMixin extends AnimalEntity implements Breedable
     @Override
     public double getMoveSpeed() {
         return this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
-    }
-
-    @Override
-    public double getBaseMoveSpeedInBlocks() {
-        return MathUtils.calcMoveSpeedValueInBlocks(this.getBaseMoveSpeed());
-    }
-
-    @Override
-    public double getMoveSpeedInBlocks() {
-        return MathUtils.calcMoveSpeedValueInBlocks(this.getMoveSpeed());
     }
 
     @Override
