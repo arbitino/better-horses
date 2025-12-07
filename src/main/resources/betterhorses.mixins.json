@@ -4,8 +4,11 @@
   "package": "net.betterhorses.fabric.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractHorseEntityAccessorMixinIs",
-    "HorseEntityMixin"
+    "HorseJumpingAccessorMixin",
+    "HorseBreedMixin",
+    "HorseProgressMixin",
+    "HorseMoveSpeedMixin",
+    "HorseAttributesMixin"
   ],
   "client": [
   ],
