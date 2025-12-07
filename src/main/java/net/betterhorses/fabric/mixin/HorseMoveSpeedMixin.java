@@ -45,17 +45,17 @@ public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSp
     }
 
     @Override
-    public double getBaseMoveSpeed() {
+    public double betterHorses$getBaseMoveSpeed() {
         return this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getBaseValue();
     }
 
     @Override
-    public double getMoveSpeed() {
+    public double betterHorses$getMoveSpeed() {
         return this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
     }
 
     @Override
-    public void setBaseMoveSpeed(double value) {
+    public void betterHorses$setBaseMoveSpeed(double value) {
         if (this.getWorld().isClient()) return;
 
         EntityAttributeInstance speedAttr = this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
@@ -69,7 +69,7 @@ public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSp
     }
 
     @Override
-    public void setInitialMoveSpeed(double value) {
+    public void betterHorses$setInitialMoveSpeed(double value) {
         if (this.getWorld().isClient()) return;
         
         NbtCompound nbt = new NbtCompound();
@@ -78,12 +78,12 @@ public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSp
     }
 
     @Override
-    public double getInitialMoveSpeed() {
+    public double betterHorses$getInitialMoveSpeed() {
         return this.dataTracker.get(INITIAL_SPEED).getDouble(INITIAL_SPEED_KEY);
     }
 
     @Override
-    public boolean hasInitialMoveSpeed() {
+    public boolean betterHorses$hasInitialMoveSpeed() {
         return this.dataTracker.get(INITIAL_SPEED).getDouble(INITIAL_SPEED_KEY) > 0.0;
     }
 
@@ -111,12 +111,12 @@ public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSp
     private void readSpeedData(NbtCompound nbt, CallbackInfo ci) {
         if (nbt.contains(CUSTOM_SPEED_KEY, NbtElement.DOUBLE_TYPE)) {
             double savedSpeed = nbt.getDouble(CUSTOM_SPEED_KEY);
-            setBaseMoveSpeed(savedSpeed);
+            betterHorses$setBaseMoveSpeed(savedSpeed);
         }
 
         if (nbt.contains(INITIAL_SPEED_KEY, NbtElement.DOUBLE_TYPE)) {
             double initialSpeed = nbt.getDouble(INITIAL_SPEED_KEY);
-            setInitialMoveSpeed(initialSpeed);
+            betterHorses$setInitialMoveSpeed(initialSpeed);
         }
     }
 }

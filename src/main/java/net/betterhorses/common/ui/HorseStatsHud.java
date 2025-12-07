@@ -43,16 +43,16 @@ public class HorseStatsHud {
         MoveSpeedAccessor speedAcc = (MoveSpeedAccessor) horse;
         JumpingAccessor jumpAcc = (JumpingAccessor) horse;
 
-        s.breed = ((BreedableHorse) horse).getHorseBreed();
-        s.progress = ((ProgressableHorse) horse).getProgress();
+        s.breed = ((BreedableHorse) horse).betterHorses$getHorseBreed();
+        s.progress = ((ProgressableHorse) horse).betterHorses$getProgress();
 
-        s.speed = speedAcc.getMoveSpeed();
-        s.jumpStrength = jumpAcc.getJumpStrength();
+        s.speed = speedAcc.betterHorses$getMoveSpeed();
+        s.jumpStrength = jumpAcc.betterHorses$getJumpStrength();
 
         s.maxSpeed = s.breed.maxSpeed();
         s.maxJump = s.breed.maxJumpHeight();
-        s.originalSpeed = speedAcc.getInitialMoveSpeed();
-        s.originalJump = jumpAcc.getInitialJumpStrength();
+        s.originalSpeed = speedAcc.betterHorses$getInitialMoveSpeed();
+        s.originalJump = jumpAcc.betterHorses$getInitialJumpStrength();
 
         s.speedLevel = HorseAttributeProgression.getSpeedLevel(horse);
         s.speedProgress = HorseAttributeProgression.getSpeedProgress(horse);

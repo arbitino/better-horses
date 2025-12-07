@@ -1,11 +1,11 @@
 package net.betterhorses.common.accessor;
 
 public interface MoveSpeedAccessor {
-    double getMoveSpeed();
-    double getBaseMoveSpeed();
-    double getInitialMoveSpeed();
-    boolean hasInitialMoveSpeed();
+    double betterHorses$getMoveSpeed();
+    double betterHorses$getBaseMoveSpeed();
+    double betterHorses$getInitialMoveSpeed();
+    boolean betterHorses$hasInitialMoveSpeed();
 
-    void setBaseMoveSpeed(double value);
-    void setInitialMoveSpeed(double value);
+    void betterHorses$setBaseMoveSpeed(double value);
+    void betterHorses$setInitialMoveSpeed(double value);
 }

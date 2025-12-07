@@ -18,12 +18,12 @@ public class HorseAttributeProgression {
 
     public static int getSpeedLevel(HorseEntity horse) {
         MoveSpeedAccessor speedAccessor = (MoveSpeedAccessor) horse;
-        if (!speedAccessor.hasInitialMoveSpeed()) return MIN_LEVEL;
+        if (!speedAccessor.betterHorses$hasInitialMoveSpeed()) return MIN_LEVEL;
 
-        double initialSpeed = speedAccessor.getInitialMoveSpeed();
-        double currentSpeed = speedAccessor.getBaseMoveSpeed();
+        double initialSpeed = speedAccessor.betterHorses$getInitialMoveSpeed();
+        double currentSpeed = speedAccessor.betterHorses$getBaseMoveSpeed();
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
         double maxSpeed = breed.maxSpeed();
 
         return calculateLevelFromValue(currentSpeed, initialSpeed, maxSpeed);
@@ -31,12 +31,12 @@ public class HorseAttributeProgression {
 
     public static int getJumpLevel(HorseEntity horse) {
         JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
-        if (!jumpAccessor.hasInitialJumpStrength()) return MIN_LEVEL;
+        if (!jumpAccessor.betterHorses$hasInitialJumpStrength()) return MIN_LEVEL;
 
-        double initialJump = jumpAccessor.getInitialJumpStrength();
-        double currentJump = jumpAccessor.getBaseJumpStrength();
+        double initialJump = jumpAccessor.betterHorses$getInitialJumpStrength();
+        double currentJump = jumpAccessor.betterHorses$getBaseJumpStrength();
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
         double maxJump = breed.maxJumpHeight();
 
         return calculateLevelFromValue(currentJump, initialJump, maxJump);
@@ -44,7 +44,7 @@ public class HorseAttributeProgression {
 
     public static double getSpeedProgress(HorseEntity horse) {
         MoveSpeedAccessor speedAccessor = (MoveSpeedAccessor) horse;
-        if (!speedAccessor.hasInitialMoveSpeed()) return 0.0;
+        if (!speedAccessor.betterHorses$hasInitialMoveSpeed()) return 0.0;
 
         int level = getSpeedLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;
@@ -58,16 +58,16 @@ public class HorseAttributeProgression {
 
     public static double getJumpProgress(HorseEntity horse) {
         JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
-        if (!jumpAccessor.hasInitialJumpStrength()) return 0.0;
+        if (!jumpAccessor.betterHorses$hasInitialJumpStrength()) return 0.0;
 
         int level = getJumpLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;
 
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
 
         ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
+        Progress progress = progressableHorse.betterHorses$getProgress();
         long totalJumps = progress.getJumpCount();
 
         double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
@@ -96,10 +96,10 @@ public class HorseAttributeProgression {
         if (level >= MAX_LEVEL) return 0.0;
 
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
 
         ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
+        Progress progress = progressableHorse.betterHorses$getProgress();
         long totalJumps = progress.getJumpCount();
 
         double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
@@ -114,13 +114,13 @@ public class HorseAttributeProgression {
     public static void updateSpeedFromDistance(HorseEntity horse) {
         MoveSpeedAccessor speedAccessor = (MoveSpeedAccessor) horse;
 
-        if (!speedAccessor.hasInitialMoveSpeed()) return;
+        if (!speedAccessor.betterHorses$hasInitialMoveSpeed()) return;
 
-        double initialSpeed = speedAccessor.getInitialMoveSpeed();
-        double currentSpeed = speedAccessor.getBaseMoveSpeed();
+        double initialSpeed = speedAccessor.betterHorses$getInitialMoveSpeed();
+        double currentSpeed = speedAccessor.betterHorses$getBaseMoveSpeed();
         
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
 
         double maxSpeed = breed.maxSpeed();
         int currentLevel = calculateLevelFromValue(currentSpeed, initialSpeed, maxSpeed);
@@ -128,7 +128,7 @@ public class HorseAttributeProgression {
         if (currentLevel >= MAX_LEVEL) return;
 
         ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
+        Progress progress = progressableHorse.betterHorses$getProgress();
         long totalDistance = progress.getRunningDistance();
 
         double distanceProgress = totalDistance * breed.speedGrowthMultiplier();
@@ -141,7 +141,7 @@ public class HorseAttributeProgression {
             int newLevel = currentLevel + 1;
             double newSpeed = interpolateValue(initialSpeed, maxSpeed, newLevel);
 
-            speedAccessor.setBaseMoveSpeed(newSpeed);
+            speedAccessor.betterHorses$setBaseMoveSpeed(newSpeed);
 
             sendLevelUpMessage(horse, "скорость", newLevel);
 
@@ -155,13 +155,13 @@ public class HorseAttributeProgression {
     public static void updateJumpFromJumps(HorseEntity horse) {
         JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
 
-        if (!jumpAccessor.hasInitialJumpStrength()) return;
+        if (!jumpAccessor.betterHorses$hasInitialJumpStrength()) return;
 
-        double initialJump = jumpAccessor.getInitialJumpStrength();
-        double currentJump = jumpAccessor.getBaseJumpStrength();
+        double initialJump = jumpAccessor.betterHorses$getInitialJumpStrength();
+        double currentJump = jumpAccessor.betterHorses$getBaseJumpStrength();
         
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
 
         double maxJump = breed.maxJumpHeight();
         int currentLevel = calculateLevelFromValue(currentJump, initialJump, maxJump);
@@ -169,7 +169,7 @@ public class HorseAttributeProgression {
         if (currentLevel >= MAX_LEVEL) return;
 
         ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
+        Progress progress = progressableHorse.betterHorses$getProgress();
         long totalJumps = progress.getJumpCount();
 
         double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
@@ -182,7 +182,7 @@ public class HorseAttributeProgression {
             int newLevel = currentLevel + 1;
             double newJump = interpolateValue(initialJump, maxJump, newLevel);
 
-            jumpAccessor.setBaseJumpStrength(newJump);
+            jumpAccessor.betterHorses$setBaseJumpStrength(newJump);
 
             sendLevelUpMessage(horse, "сила прыжка", newLevel);
 
@@ -195,10 +195,10 @@ public class HorseAttributeProgression {
 
     private static double getDistanceProgress(HorseEntity horse) {
         BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
 
         ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
+        Progress progress = progressableHorse.betterHorses$getProgress();
         long totalDistance = progress.getRunningDistance();
 
         double distanceProgress = totalDistance * breed.speedGrowthMultiplier();

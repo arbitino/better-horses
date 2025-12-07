@@ -32,12 +32,12 @@ public abstract class HorseProgressMixin extends AnimalEntity implements Progres
     }
 
     @Override
-    public Progress getProgress() {
+    public Progress betterHorses$getProgress() {
         return Progress.fromNbt(this.dataTracker.get(HORSE_PROGRESS));
     }
 
     @Override
-    public void setProgress(Progress progress) {
+    public void betterHorses$setProgress(Progress progress) {
         this.dataTracker.set(HORSE_PROGRESS, progress.toNbt());
     }
 

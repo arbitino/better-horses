@@ -25,15 +25,15 @@ public abstract class HorseAttributesMixin extends AnimalEntity {
         MoveSpeedAccessor moveSpeedAccessor = (MoveSpeedAccessor) this;
         JumpingAccessor jumpingAccessor = (JumpingAccessor) this;
 
-        double baseSpeed = moveSpeedAccessor.getBaseMoveSpeed();
+        double baseSpeed = moveSpeedAccessor.betterHorses$getBaseMoveSpeed();
 
-        if (!moveSpeedAccessor.hasInitialMoveSpeed()) {
-            moveSpeedAccessor.setInitialMoveSpeed(baseSpeed);
+        if (!moveSpeedAccessor.betterHorses$hasInitialMoveSpeed()) {
+            moveSpeedAccessor.betterHorses$setInitialMoveSpeed(baseSpeed);
         }
 
-        if (!jumpingAccessor.hasInitialJumpStrength()) {
-            double baseJump = jumpingAccessor.getBaseJumpStrength();
-            jumpingAccessor.setInitialJumpStrength(baseJump);
+        if (!jumpingAccessor.betterHorses$hasInitialJumpStrength()) {
+            double baseJump = jumpingAccessor.betterHorses$getBaseJumpStrength();
+            jumpingAccessor.betterHorses$setInitialJumpStrength(baseJump);
         }
     }
 }

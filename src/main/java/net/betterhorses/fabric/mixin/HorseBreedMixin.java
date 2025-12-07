@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(HorseEntity.class)
 public abstract class HorseBreedMixin extends AnimalEntity implements BreedableHorse {
     @Override
-    public Breed getHorseBreed() {
+    public Breed betterHorses$getHorseBreed() {
         NbtCompound breedNbt = this.dataTracker.get(HORSE_BREED);
 
         if (breedNbt.isEmpty()) {
@@ -33,7 +33,7 @@ public abstract class HorseBreedMixin extends AnimalEntity implements BreedableH
     }
 
     @Override
-    public void setHorseBreed(Breed breed) {
+    public void betterHorses$setHorseBreed(Breed breed) {
         this.dataTracker.set(HORSE_BREED, breed.toNbt());
     }
 

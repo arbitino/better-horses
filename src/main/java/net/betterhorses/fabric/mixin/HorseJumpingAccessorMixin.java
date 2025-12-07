@@ -43,36 +43,36 @@ public class HorseJumpingAccessorMixin implements JumpingAccessor {
     private static final String INITIAL_JUMP_KEY = "HorseInitialJump";
 
     @Override
-    public boolean isJumping() {
+    public boolean betterHorses$isJumping() {
         return this.jumping;
     }
 
     @Override
-    public boolean wasJumpingLastTick() {
+    public boolean betterHorses$wasJumpingLastTick() {
         return wasJumpingLastTick;
     }
 
     @Override
-    public void setWasJumpingLastTick(boolean value) {
+    public void betterHorses$setWasJumpingLastTick(boolean value) {
         this.wasJumpingLastTick = value;
     }
 
     @Override
-    public double getBaseJumpStrength() {
+    public double betterHorses$getBaseJumpStrength() {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         EntityAttributeInstance jumpAttr = self.getAttributeInstance(EntityAttributes.JUMP_STRENGTH);
         return jumpAttr != null ? jumpAttr.getBaseValue() : 0.0;
     }
 
     @Override
-    public double getJumpStrength() {
+    public double betterHorses$getJumpStrength() {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         EntityAttributeInstance jumpAttr = self.getAttributeInstance(EntityAttributes.JUMP_STRENGTH);
         return jumpAttr != null ? jumpAttr.getValue() : 0.0;
     }
 
     @Override
-    public void setBaseJumpStrength(double value) {
+    public void betterHorses$setBaseJumpStrength(double value) {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         if (self.getWorld().isClient()) return;
 
@@ -87,7 +87,7 @@ public class HorseJumpingAccessorMixin implements JumpingAccessor {
     }
 
     @Override
-    public void setInitialJumpStrength(double value) {
+    public void betterHorses$setInitialJumpStrength(double value) {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         if (self.getWorld().isClient()) return;
         
@@ -97,13 +97,13 @@ public class HorseJumpingAccessorMixin implements JumpingAccessor {
     }
 
     @Override
-    public double getInitialJumpStrength() {
+    public double betterHorses$getInitialJumpStrength() {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         return self.getDataTracker().get(INITIAL_JUMP).getDouble(INITIAL_JUMP_KEY);
     }
 
     @Override
-    public boolean hasInitialJumpStrength() {
+    public boolean betterHorses$hasInitialJumpStrength() {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         return self.getDataTracker().get(INITIAL_JUMP).getDouble(INITIAL_JUMP_KEY) > 0.0;
     }
@@ -133,12 +133,12 @@ public class HorseJumpingAccessorMixin implements JumpingAccessor {
     private void readJumpData(NbtCompound nbt, CallbackInfo ci) {
         if (nbt.contains(CUSTOM_JUMP_KEY, NbtElement.DOUBLE_TYPE)) {
             double savedJump = nbt.getDouble(CUSTOM_JUMP_KEY);
-            setBaseJumpStrength(savedJump);
+            betterHorses$setBaseJumpStrength(savedJump);
         }
 
         if (nbt.contains(INITIAL_JUMP_KEY, NbtElement.DOUBLE_TYPE)) {
             double initialJump = nbt.getDouble(INITIAL_JUMP_KEY);
-            setInitialJumpStrength(initialJump);
+            betterHorses$setInitialJumpStrength(initialJump);
         }
     }
 }

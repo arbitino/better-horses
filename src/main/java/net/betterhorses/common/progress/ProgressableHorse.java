@@ -2,8 +2,8 @@ package net.betterhorses.common.progress;
 
 public interface ProgressableHorse {
     // Получение прогресса
-    Progress getProgress();
+    Progress betterHorses$getProgress();
 
     // Установка прогресса
-    void setProgress(Progress progress);
+    void betterHorses$setProgress(Progress progress);
 }

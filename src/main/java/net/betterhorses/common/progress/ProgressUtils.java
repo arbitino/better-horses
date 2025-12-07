@@ -13,19 +13,19 @@ public class ProgressUtils {
 
     public static void setHorseJumps(HorseEntity horse) {
         JumpingAccessor jumpingAccessor = (JumpingAccessor) horse;
-        Progress progress = ((ProgressableHorse) horse).getProgress();
+        Progress progress = ((ProgressableHorse) horse).betterHorses$getProgress();
 
-        boolean currentlyJumping = jumpingAccessor.isJumping();
-        boolean wasJumping = jumpingAccessor.wasJumpingLastTick();
+        boolean currentlyJumping = jumpingAccessor.betterHorses$isJumping();
+        boolean wasJumping = jumpingAccessor.betterHorses$wasJumpingLastTick();
 
         if (currentlyJumping && !wasJumping) {
             progress.addJump();
-            ((ProgressableHorse) horse).setProgress(progress);
+            ((ProgressableHorse) horse).betterHorses$setProgress(progress);
 
             HorseAttributeProgression.updateJumpFromJumps(horse);
         }
 
-        jumpingAccessor.setWasJumpingLastTick(currentlyJumping);
+        jumpingAccessor.betterHorses$setWasJumpingLastTick(currentlyJumping);
     }
 
     public static void setHorseDistance(HorseEntity horse) {
@@ -37,9 +37,9 @@ public class ProgressUtils {
             double distance = currentPos.distanceTo(lastPos);
 
             if (distance >= 0.01) {
-                Progress progress = ((ProgressableHorse) horse).getProgress();
+                Progress progress = ((ProgressableHorse) horse).betterHorses$getProgress();
                 progress.addDistance((long) distance);
-                ((ProgressableHorse) horse).setProgress(progress);
+                ((ProgressableHorse) horse).betterHorses$setProgress(progress);
                 HorseAttributeProgression.updateSpeedFromDistance(horse);
 
                 lastHorsePositions.put(horseUuid, currentPos);

@@ -1,14 +1,14 @@
 package net.betterhorses.common.accessor;
 
 public interface JumpingAccessor {
-    boolean isJumping();
-    boolean wasJumpingLastTick();
-    double getBaseJumpStrength();
-    double getJumpStrength();
-    double getInitialJumpStrength();
-    boolean hasInitialJumpStrength();
+    boolean betterHorses$isJumping();
+    boolean betterHorses$wasJumpingLastTick();
+    double betterHorses$getBaseJumpStrength();
+    double betterHorses$getJumpStrength();
+    double betterHorses$getInitialJumpStrength();
+    boolean betterHorses$hasInitialJumpStrength();
 
-    void setWasJumpingLastTick(boolean value);
-    void setBaseJumpStrength(double value);
-    void setInitialJumpStrength(double value);
+    void betterHorses$setWasJumpingLastTick(boolean value);
+    void betterHorses$setBaseJumpStrength(double value);
+    void betterHorses$setInitialJumpStrength(double value);
 }
