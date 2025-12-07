@@ -5,8 +5,8 @@ import net.minecraft.nbt.NbtCompound;
 public record Breed(
         String id,
         String displayName,
-        float maxJumpHeight,
-        float maxSpeed,
+        double maxJumpHeight,
+        double maxSpeed,
         ObedienceLevel obedience,
         float speedGrowthMultiplier,
         float jumpGrowthMultiplier
@@ -46,8 +46,8 @@ public record Breed(
         NbtCompound nbt = new NbtCompound();
         nbt.putString("id", id);
         nbt.putString("displayName", displayName);
-        nbt.putFloat("maxJumpHeight", maxJumpHeight);
-        nbt.putFloat("maxSpeed", maxSpeed);
+        nbt.putDouble("maxJumpHeight", maxJumpHeight);
+        nbt.putDouble("maxSpeed", maxSpeed);
         nbt.putInt("obedience", obedience.getLevel());
         nbt.putFloat("speedGrowthMultiplier", speedGrowthMultiplier);
         nbt.putFloat("jumpGrowthMultiplier", jumpGrowthMultiplier);
@@ -58,8 +58,8 @@ public record Breed(
     public static Breed fromNbt(NbtCompound nbt) {
         String id = nbt.getString("id");
         String displayName = nbt.getString("displayName");
-        float maxJumpHeight = nbt.getFloat("maxJumpHeight");
-        float maxSpeed = nbt.getFloat("maxSpeed");
+        double maxJumpHeight = nbt.getDouble("maxJumpHeight");
+        double maxSpeed = nbt.getDouble("maxSpeed");
         int obedienceLevel = nbt.getInt("obedience");
         float speedGrowthMultiplier = nbt.contains("speedGrowthMultiplier") ? nbt.getFloat("speedGrowthMultiplier") : 1.0f;
         float jumpGrowthMultiplier = nbt.contains("jumpGrowthMultiplier") ? nbt.getFloat("jumpGrowthMultiplier") : 1.0f;

@@ -1,5 +1,6 @@
 package net.betterhorses.common.breed;
 import net.betterhorses.common.BetterHorses;
+import net.betterhorses.common.util.MathUtils;
 
 import java.util.*;
 
@@ -8,9 +9,9 @@ public class BreedRegistry {
 
     private static final Random RANDOM = new Random();
 
-    private static final Breed ARABIAN = new Breed("arabian", "Арабская", 1.0f, 0.35f, Breed.ObedienceLevel.VERY_OBEDIENT, 1.2f, 0.8f);
-    private static final Breed MUSTANG = new Breed("mustang", "Мустанг", 0.75f, 0.3f, Breed.ObedienceLevel.DISOBEDIENT, 0.9f, 1.3f);
-    private static final Breed DEFAULT = new Breed("default", "Обычная", 0.5f, 0.25f, Breed.ObedienceLevel.NORMAL, 1.0f, 1.0f);
+    private static final Breed ARABIAN = new Breed("arabian", "Арабская", MathUtils.blocksToJumpAttribute(5.0), MathUtils.blocksPerSecondToMoveAttribute(15.0), Breed.ObedienceLevel.VERY_OBEDIENT, 1.2f, 0.8f);
+    private static final Breed MUSTANG = new Breed("mustang", "Мустанг", MathUtils.blocksToJumpAttribute(4.0), MathUtils.blocksPerSecondToMoveAttribute(13.0), Breed.ObedienceLevel.DISOBEDIENT, 0.9f, 1.3f);
+    private static final Breed DEFAULT = new Breed("default", "Обычная", MathUtils.blocksToJumpAttribute(3.5), MathUtils.blocksPerSecondToMoveAttribute(10.5), Breed.ObedienceLevel.NORMAL, 1.0f, 1.0f);
 
     public static void register(Breed breed) {
         REGISTRY.put(breed.id(), breed);

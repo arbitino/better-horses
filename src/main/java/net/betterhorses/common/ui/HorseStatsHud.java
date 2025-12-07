@@ -71,12 +71,12 @@ public class HorseStatsHud {
 
         if (!config.useHumanFriendlyUnits) return;
 
-        s.speed = MathUtils.calcMoveSpeedValueInBlocks(s.speed);
-        s.jumpStrength = MathUtils.calcJumpHeightValueInBlocks(s.jumpStrength);
-        s.maxSpeed = MathUtils.calcMoveSpeedValueInBlocks(s.maxSpeed);
-        s.maxJump = MathUtils.calcJumpHeightValueInBlocks(s.maxJump);
-        s.originalSpeed = MathUtils.calcMoveSpeedValueInBlocks(s.originalSpeed);
-        s.originalJump = MathUtils.calcJumpHeightValueInBlocks(s.originalJump);
+        s.speed = MathUtils.moveAttributeToBlocksPerSecond(s.speed);
+        s.jumpStrength = MathUtils.jumpAttributeToBlocks(s.jumpStrength);
+        s.maxSpeed = MathUtils.moveAttributeToBlocksPerSecond(s.maxSpeed);
+        s.maxJump = MathUtils.jumpAttributeToBlocks(s.maxJump);
+        s.originalSpeed = MathUtils.moveAttributeToBlocksPerSecond(s.originalSpeed);
+        s.originalJump = MathUtils.jumpAttributeToBlocks(s.originalJump);
 
         s.speedUnit = " б/с";
         s.jumpUnit = " б";
