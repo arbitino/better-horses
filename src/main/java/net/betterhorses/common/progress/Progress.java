@@ -1,21 +1,13 @@
 package net.betterhorses.common.progress;
 
-import net.betterhorses.common.accessor.jump.IsJumpingAccessor;
-import net.betterhorses.common.accessor.jump.JumpingLastTickAccessor;
-import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
-
-import java.util.UUID;
 
 public class Progress {
     public static final String KEY = "HorseProgress";
 
-
     private long jumps;
     private long runningDistance;
 
-    // Пустой прогресс для новой лошади
     public static Progress empty() {
         return new Progress(0, 0);
     }
@@ -33,15 +25,14 @@ public class Progress {
         return this.runningDistance;
     }
 
-    // Сериализация в NBT
     public NbtCompound toNbt() {
         NbtCompound nbt = new NbtCompound();
         nbt.putLong("runningDistance", this.runningDistance);
         nbt.putLong("jumpCount", this.jumps);
+
         return nbt;
     }
 
-    // Десериализация из NBT
     public static Progress fromNbt(NbtCompound nbt) {
         return new Progress(
             nbt.getLong("jumpCount"),

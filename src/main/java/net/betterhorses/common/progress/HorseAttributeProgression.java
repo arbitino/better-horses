@@ -1,8 +1,8 @@
 package net.betterhorses.common.progress;
 
 import net.betterhorses.common.BetterHorses;
-import net.betterhorses.common.accessor.jump.JumpingHeightAccessor;
-import net.betterhorses.common.accessor.speed.MoveSpeedAccessor;
+import net.betterhorses.common.accessor.JumpingAccessor;
+import net.betterhorses.common.accessor.MoveSpeedAccessor;
 import net.betterhorses.common.breed.Breed;
 import net.betterhorses.common.breed.BreedableHorse;
 import net.minecraft.entity.passive.HorseEntity;
@@ -30,7 +30,7 @@ public class HorseAttributeProgression {
     }
 
     public static int getJumpLevel(HorseEntity horse) {
-        JumpingHeightAccessor jumpAccessor = (JumpingHeightAccessor) horse;
+        JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
         if (!jumpAccessor.hasInitialJumpStrength()) return MIN_LEVEL;
 
         double initialJump = jumpAccessor.getInitialJumpStrength();
@@ -49,16 +49,7 @@ public class HorseAttributeProgression {
         int level = getSpeedLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;
 
-        BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
-
-        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
-        long totalDistance = progress.getRunningDistance();
-
-        double distanceProgress = totalDistance * breed.speedGrowthMultiplier();
-        distanceProgress = applyObedienceMultiplier(breed.getObedience(), distanceProgress);
-        distanceProgress *= DISTANCE_XP_MULTIPLIER;
+        double distanceProgress = getDistanceProgress(horse);
 
         double next = getRequiredDistanceForLevel(level + 1);
         double current = getRequiredDistanceForLevel(level);
@@ -66,7 +57,7 @@ public class HorseAttributeProgression {
     }
 
     public static double getJumpProgress(HorseEntity horse) {
-        JumpingHeightAccessor jumpAccessor = (JumpingHeightAccessor) horse;
+        JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
         if (!jumpAccessor.hasInitialJumpStrength()) return 0.0;
 
         int level = getJumpLevel(horse);
@@ -85,6 +76,7 @@ public class HorseAttributeProgression {
 
         double next = getRequiredJumpsForLevel(level + 1);
         double current = getRequiredJumpsForLevel(level);
+
         return Math.max(0.0, Math.min(1.0, (jumpProgress - current) / (next - current)));
     }
 
@@ -92,18 +84,10 @@ public class HorseAttributeProgression {
         int level = getSpeedLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;
 
-        BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.getHorseBreed();
-
-        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.getProgress();
-        long totalDistance = progress.getRunningDistance();
-
-        double distanceProgress = totalDistance * breed.speedGrowthMultiplier();
-        distanceProgress = applyObedienceMultiplier(breed.getObedience(), distanceProgress);
-        distanceProgress *= DISTANCE_XP_MULTIPLIER;
+        double distanceProgress = getDistanceProgress(horse);
 
         double required = getRequiredDistanceForLevel(level + 1);
+
         return Math.max(0.0, required - distanceProgress);
     }
 
@@ -123,6 +107,7 @@ public class HorseAttributeProgression {
         jumpProgress *= JUMP_XP_MULTIPLIER;
 
         double required = getRequiredJumpsForLevel(level + 1);
+
         return Math.max(0.0, required - jumpProgress);
     }
 
@@ -168,7 +153,7 @@ public class HorseAttributeProgression {
     }
 
     public static void updateJumpFromJumps(HorseEntity horse) {
-        JumpingHeightAccessor jumpAccessor = (JumpingHeightAccessor) horse;
+        JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
 
         if (!jumpAccessor.hasInitialJumpStrength()) return;
 
@@ -208,10 +193,26 @@ public class HorseAttributeProgression {
         }
     }
 
+    private static double getDistanceProgress(HorseEntity horse) {
+        BreedableHorse breedableHorse = (BreedableHorse) horse;
+        Breed breed = breedableHorse.getHorseBreed();
+
+        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
+        Progress progress = progressableHorse.getProgress();
+        long totalDistance = progress.getRunningDistance();
+
+        double distanceProgress = totalDistance * breed.speedGrowthMultiplier();
+        distanceProgress = applyObedienceMultiplier(breed.getObedience(), distanceProgress);
+        distanceProgress *= DISTANCE_XP_MULTIPLIER;
+
+        return distanceProgress;
+    }
+
     private static double getRequiredDistanceForLevel(int level) {
         if (level <= MIN_LEVEL) return 0;
         double base = 100.0;
-        double exponent = 1.5 + (MAX_LEVEL / 50.0); // рост зависимости от количества уровней
+        double exponent = 1.5 + (MAX_LEVEL / 50.0);
+
         return base + base * Math.pow(level, exponent);
     }
 
@@ -219,6 +220,7 @@ public class HorseAttributeProgression {
         if (level <= MIN_LEVEL) return 0;
         double base = 5.0;
         double exponent = 1.8 + (MAX_LEVEL / 60.0);
+
         return base + base * Math.pow(level, exponent);
     }
 
@@ -226,6 +228,7 @@ public class HorseAttributeProgression {
         if (level <= MIN_LEVEL) return initialValue;
         if (level >= MAX_LEVEL) return maxValue;
         double t = (level - MIN_LEVEL) / (double) (MAX_LEVEL - MIN_LEVEL);
+
         return initialValue + (maxValue - initialValue) * t;
     }
 
@@ -235,19 +238,14 @@ public class HorseAttributeProgression {
 
         double ratio = (currentValue - initialValue) / (maxValue - initialValue);
         int level = (int) Math.round(ratio * (MAX_LEVEL - MIN_LEVEL) + MIN_LEVEL);
+
         return Math.max(MIN_LEVEL, Math.min(MAX_LEVEL, level));
     }
 
     private static double applyObedienceMultiplier(Breed.ObedienceLevel obedience, double progress) {
         return switch (obedience) {
-            case VERY_OBEDIENT -> progress * 1.15;
-            case DISOBEDIENT -> {
-                if (Math.random() < 0.2) {
-                    yield Math.max(0, progress * 0.5);
-                } else {
-                    yield progress * 0.8;
-                }
-            }
+            case VERY_OBEDIENT -> progress * 1.2;
+            case DISOBEDIENT -> progress * 0.8;
             default -> progress;
         };
     }

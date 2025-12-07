@@ -1,7 +1,6 @@
 package net.betterhorses.common.progress;
 
-import net.betterhorses.common.accessor.jump.IsJumpingAccessor;
-import net.betterhorses.common.accessor.jump.JumpingLastTickAccessor;
+import net.betterhorses.common.accessor.JumpingAccessor;
 import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.util.math.Vec3d;
 
@@ -13,12 +12,11 @@ public class ProgressUtils {
     private static final Map<UUID, Vec3d> lastHorsePositions = new HashMap<>();
 
     public static void setHorseJumps(HorseEntity horse) {
-        JumpingLastTickAccessor tracker = (JumpingLastTickAccessor) horse;
-        IsJumpingAccessor jumpingAccessor = (IsJumpingAccessor) horse;
+        JumpingAccessor jumpingAccessor = (JumpingAccessor) horse;
         Progress progress = ((ProgressableHorse) horse).getProgress();
 
         boolean currentlyJumping = jumpingAccessor.isJumping();
-        boolean wasJumping = tracker.wasJumpingLastTick();
+        boolean wasJumping = jumpingAccessor.wasJumpingLastTick();
 
         if (currentlyJumping && !wasJumping) {
             progress.addJump();
@@ -27,7 +25,7 @@ public class ProgressUtils {
             HorseAttributeProgression.updateJumpFromJumps(horse);
         }
 
-        tracker.setWasJumpingLastTick(currentlyJumping);
+        jumpingAccessor.setWasJumpingLastTick(currentlyJumping);
     }
 
     public static void setHorseDistance(HorseEntity horse) {
@@ -37,15 +35,18 @@ public class ProgressUtils {
 
         if (lastPos != null) {
             double distance = currentPos.distanceTo(lastPos);
-            Progress progress = ((ProgressableHorse) horse).getProgress();
 
-            progress.addDistance((long) distance);
-            ((ProgressableHorse) horse).setProgress(progress);
+            if (distance >= 0.01) {
+                Progress progress = ((ProgressableHorse) horse).getProgress();
+                progress.addDistance((long) distance);
+                ((ProgressableHorse) horse).setProgress(progress);
+                HorseAttributeProgression.updateSpeedFromDistance(horse);
 
-            HorseAttributeProgression.updateSpeedFromDistance(horse);
+                lastHorsePositions.put(horseUuid, currentPos);
+            }
+        } else {
+            lastHorsePositions.put(horseUuid, currentPos);
         }
-
-        lastHorsePositions.put(horseUuid, currentPos);
     }
 
     public static void clearHorseSession(HorseEntity horse) {

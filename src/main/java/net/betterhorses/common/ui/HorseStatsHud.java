@@ -1,8 +1,8 @@
 package net.betterhorses.common.ui;
 
 import me.shedaniel.autoconfig.AutoConfig;
-import net.betterhorses.common.accessor.jump.JumpingHeightAccessor;
-import net.betterhorses.common.accessor.speed.MoveSpeedAccessor;
+import net.betterhorses.common.accessor.JumpingAccessor;
+import net.betterhorses.common.accessor.MoveSpeedAccessor;
 import net.betterhorses.common.breed.Breed;
 import net.betterhorses.common.breed.BreedableHorse;
 import net.betterhorses.common.config.BetterHorsesConfig;
@@ -41,7 +41,7 @@ public class HorseStatsHud {
         HorseStats s = new HorseStats();
 
         MoveSpeedAccessor speedAcc = (MoveSpeedAccessor) horse;
-        JumpingHeightAccessor jumpAcc = (JumpingHeightAccessor) horse;
+        JumpingAccessor jumpAcc = (JumpingAccessor) horse;
 
         s.breed = ((BreedableHorse) horse).getHorseBreed();
         s.progress = ((ProgressableHorse) horse).getProgress();
@@ -72,11 +72,11 @@ public class HorseStatsHud {
         if (!config.useHumanFriendlyUnits) return;
 
         s.speed = MathUtils.calcMoveSpeedValueInBlocks(s.speed);
-        s.jumpStrength = MathUtils.calcMoveSpeedValueInBlocks(s.jumpStrength);
+        s.jumpStrength = MathUtils.calcJumpHeightValueInBlocks(s.jumpStrength);
         s.maxSpeed = MathUtils.calcMoveSpeedValueInBlocks(s.maxSpeed);
-        s.maxJump = MathUtils.calcMoveSpeedValueInBlocks(s.maxJump);
+        s.maxJump = MathUtils.calcJumpHeightValueInBlocks(s.maxJump);
         s.originalSpeed = MathUtils.calcMoveSpeedValueInBlocks(s.originalSpeed);
-        s.originalJump = MathUtils.calcMoveSpeedValueInBlocks(s.originalJump);
+        s.originalJump = MathUtils.calcJumpHeightValueInBlocks(s.originalJump);
 
         s.speedUnit = " б/с";
         s.jumpUnit = " б";
