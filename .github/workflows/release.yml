@@ -1,0 +1,81 @@
+name: Auto Release
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'gradle.properties'
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      tag-exists: ${{ steps.check-tag.outputs.exists }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Get current version
+      id: get-version
+      run: |
+        VERSION=$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $VERSION"
+
+    - name: Check if tag exists
+      id: check-tag
+      run: |
+        if git rev-parse "v${{ steps.get-version.outputs.version }}" >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+  release:
+    needs: check-version
+    if: needs.check-version.outputs.tag-exists == 'false' && !contains(needs.check-version.outputs.version, 'SNAPSHOT')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Create and push tag
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git tag "v${{ needs.check-version.outputs.version }}"
+        git push origin "v${{ needs.check-version.outputs.version }}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: "v${{ needs.check-version.outputs.version }}"
+        name: "Better Horses v${{ needs.check-version.outputs.version }}"
+        files: |
+          build/libs/*-${{ needs.check-version.outputs.version }}.jar
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
