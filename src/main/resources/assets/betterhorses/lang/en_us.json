@@ -18,5 +18,17 @@
   "text.autoconfig.betterhorses.option.hud.showBaseAttributes": "Show Base Attributes",
   "text.autoconfig.betterhorses.option.hud.showBaseAttributes.@Tooltip": "Display original attributes before training",
   "text.autoconfig.betterhorses.option.hud.showTotalProgress": "Show Total Progress",
-  "text.autoconfig.betterhorses.option.hud.showTotalProgress.@Tooltip": "Display total distance traveled and jumps made"
+  "text.autoconfig.betterhorses.option.hud.showTotalProgress.@Tooltip": "Display total distance traveled and jumps made",
+  
+  "breed.betterhorses.default": "Default",
+  "breed.betterhorses.arabian": "Arabian",
+  "breed.betterhorses.mustang": "Mustang",
+  "breed.betterhorses.trakehner": "Trakehner",
+  "breed.betterhorses.orlov_trotter": "Orlov Trotter",
+  "breed.betterhorses.vladimir_heavy_breed": "Vladimir Heavy Breed",
+  "breed.betterhorses.akhal_teke": "Akhal-Teke",
+  "breed.betterhorses.friesian": "Friesian",
+  "breed.betterhorses.russian_riding_horse": "Russian Riding Horse",
+  "breed.betterhorses.hanoverian": "Hanoverian",
+  "breed.betterhorses.buddyonny": "Buddyonny"
 }

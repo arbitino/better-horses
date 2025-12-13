@@ -1,12 +1,15 @@
 package net.betterhorses.fabric.mixin;
 
+import net.betterhorses.common.BetterHorses;
 import net.betterhorses.common.accessor.JumpingAccessor;
+import net.betterhorses.common.progress.HorseAttributeProgression;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.HorseEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +18,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(AbstractHorseEntity.class)
 public class HorseJumpingAccessorMixin implements JumpingAccessor {
@@ -76,9 +81,13 @@ public class HorseJumpingAccessorMixin implements JumpingAccessor {
         AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
         if (self.getWorld().isClient()) return;
 
+        BetterHorses.LOGGER.info("HorseJumpingAccessorMixin.setBaseJumpStrength() для лошади " + self.getUuid() + " - устанавливается прыжок: " + value);
+
         EntityAttributeInstance jumpAttr = self.getAttributeInstance(EntityAttributes.JUMP_STRENGTH);
         if (jumpAttr != null) {
+            double oldValue = jumpAttr.getBaseValue();
             jumpAttr.setBaseValue(value);
+            BetterHorses.LOGGER.info("Атрибут прыжка изменен с " + oldValue + " на " + value);
         }
 
         NbtCompound nbt = new NbtCompound();
@@ -140,5 +149,19 @@ public class HorseJumpingAccessorMixin implements JumpingAccessor {
             double initialJump = nbt.getDouble(INITIAL_JUMP_KEY);
             betterHorses$setInitialJumpStrength(initialJump);
         }
+
+        restoreJumpAttributesFromProgress();
+    }
+    
+    @Unique
+    private void restoreJumpAttributesFromProgress() {
+        AbstractHorseEntity self = (AbstractHorseEntity) (Object) this;
+        if (self.getWorld().isClient()) return;
+
+        Objects.requireNonNull(self.getWorld().getServer()).execute(() -> {
+            if (self instanceof HorseEntity horse) {
+                HorseAttributeProgression.restoreJumpFromProgress(horse);
+            }
+        });
     }
 }

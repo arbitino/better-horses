@@ -1,0 +1,8 @@
+{
+  "translation_key": "breed.betterhorses.mustang",
+  "max_jump_height": 5.0,
+  "max_speed": 14.0,
+  "obedience": 3,
+  "speed_growth_multiplier": 1.0,
+  "jump_growth_multiplier": 1.0
+}

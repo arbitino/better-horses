@@ -1,7 +1,9 @@
 package net.betterhorses.fabric.mixin;
 
+import net.betterhorses.common.BetterHorses;
 import net.betterhorses.common.accessor.MoveSpeedAccessor;
 
+import net.betterhorses.common.progress.HorseAttributeProgression;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -19,6 +21,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(HorseEntity.class)
 public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSpeedAccessor {
@@ -46,21 +50,25 @@ public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSp
 
     @Override
     public double betterHorses$getBaseMoveSpeed() {
-        return this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getBaseValue();
+        return Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED)).getBaseValue();
     }
 
     @Override
     public double betterHorses$getMoveSpeed() {
-        return this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getValue();
+        return Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED)).getValue();
     }
 
     @Override
     public void betterHorses$setBaseMoveSpeed(double value) {
         if (this.getWorld().isClient()) return;
 
+        BetterHorses.LOGGER.info("HorseMoveSpeedMixin.setBaseMoveSpeed() для лошади " + this.getUuid() + " - устанавливается скорость: " + value);
+
         EntityAttributeInstance speedAttr = this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
         if (speedAttr != null) {
+            double oldValue = speedAttr.getBaseValue();
             speedAttr.setBaseValue(value);
+            BetterHorses.LOGGER.info("Атрибут скорости изменен с " + oldValue + " на " + value);
         }
 
         NbtCompound nbt = new NbtCompound();
@@ -118,5 +126,16 @@ public abstract class HorseMoveSpeedMixin extends AnimalEntity implements MoveSp
             double initialSpeed = nbt.getDouble(INITIAL_SPEED_KEY);
             betterHorses$setInitialMoveSpeed(initialSpeed);
         }
+
+        restoreAttributesFromProgress();
+    }
+    
+    @Unique
+    private void restoreAttributesFromProgress() {
+        if (this.getWorld().isClient()) return;
+
+        Objects.requireNonNull(this.getWorld().getServer()).execute(() -> {
+            HorseAttributeProgression.restoreSpeedFromProgress((HorseEntity)(Object)this);
+        });
     }
 }

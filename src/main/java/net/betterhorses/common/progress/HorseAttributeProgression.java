@@ -63,16 +63,7 @@ public class HorseAttributeProgression {
         int level = getJumpLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;
 
-        BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.betterHorses$getHorseBreed();
-
-        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.betterHorses$getProgress();
-        long totalJumps = progress.getJumpCount();
-
-        double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
-        jumpProgress = applyObedienceMultiplier(breed.getObedience(), jumpProgress);
-        jumpProgress *= JUMP_XP_MULTIPLIER;
+        double jumpProgress = getProgress(horse);
 
         double next = getRequiredJumpsForLevel(level + 1);
         double current = getRequiredJumpsForLevel(level);
@@ -95,16 +86,7 @@ public class HorseAttributeProgression {
         int level = getJumpLevel(horse);
         if (level >= MAX_LEVEL) return 0.0;
 
-        BreedableHorse breedableHorse = (BreedableHorse) horse;
-        Breed breed = breedableHorse.betterHorses$getHorseBreed();
-
-        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
-        Progress progress = progressableHorse.betterHorses$getProgress();
-        long totalJumps = progress.getJumpCount();
-
-        double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
-        jumpProgress = applyObedienceMultiplier(breed.getObedience(), jumpProgress);
-        jumpProgress *= JUMP_XP_MULTIPLIER;
+        double jumpProgress = getProgress(horse);
 
         double required = getRequiredJumpsForLevel(level + 1);
 
@@ -193,6 +175,21 @@ public class HorseAttributeProgression {
         }
     }
 
+    private static double getProgress(HorseEntity horse) {
+        BreedableHorse breedableHorse = (BreedableHorse) horse;
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
+
+        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
+        Progress progress = progressableHorse.betterHorses$getProgress();
+        long totalJumps = progress.getJumpCount();
+
+        double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
+        jumpProgress = applyObedienceMultiplier(breed.getObedience(), jumpProgress);
+        jumpProgress *= JUMP_XP_MULTIPLIER;
+
+        return jumpProgress;
+    }
+
     private static double getDistanceProgress(HorseEntity horse) {
         BreedableHorse breedableHorse = (BreedableHorse) horse;
         Breed breed = breedableHorse.betterHorses$getHorseBreed();
@@ -255,5 +252,75 @@ public class HorseAttributeProgression {
             String message = String.format("Лошадь улучшила показатель %s! Нынешний уровень %d/%d", statType, newLevel, MAX_LEVEL);
             player.sendMessage(Text.literal(message), true);
         }
+    }
+
+    public static void restoreSpeedFromProgress(HorseEntity horse) {
+        MoveSpeedAccessor speedAccessor = (MoveSpeedAccessor) horse;
+        if (!speedAccessor.betterHorses$hasInitialMoveSpeed()) return;
+        
+        BreedableHorse breedableHorse = (BreedableHorse) horse;
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
+        if (breed == null) return;
+
+        double initialSpeed = speedAccessor.betterHorses$getInitialMoveSpeed();
+        double maxSpeed = breed.maxSpeed();
+        
+        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
+        Progress progress = progressableHorse.betterHorses$getProgress();
+        long totalDistance = progress.getRunningDistance();
+
+        double distanceProgress = totalDistance * breed.speedGrowthMultiplier();
+        distanceProgress = applyObedienceMultiplier(breed.getObedience(), distanceProgress);
+        distanceProgress *= DISTANCE_XP_MULTIPLIER;
+
+        int level = MIN_LEVEL;
+        for (int i = MIN_LEVEL; i <= MAX_LEVEL; i++) {
+            if (distanceProgress >= getRequiredDistanceForLevel(i)) {
+                level = i;
+            } else {
+                break;
+            }
+        }
+
+        double correctSpeed = interpolateValue(initialSpeed, maxSpeed, level);
+        speedAccessor.betterHorses$setBaseMoveSpeed(correctSpeed);
+        
+        BetterHorses.LOGGER.info("Восстановлена скорость лошади {}: уровень {}, скорость {}",
+            horse.getUuid(), level, correctSpeed);
+    }
+
+    public static void restoreJumpFromProgress(HorseEntity horse) {
+        JumpingAccessor jumpAccessor = (JumpingAccessor) horse;
+        if (!jumpAccessor.betterHorses$hasInitialJumpStrength()) return;
+        
+        BreedableHorse breedableHorse = (BreedableHorse) horse;
+        Breed breed = breedableHorse.betterHorses$getHorseBreed();
+        if (breed == null) return;
+
+        double initialJump = jumpAccessor.betterHorses$getInitialJumpStrength();
+        double maxJump = breed.maxJumpHeight();
+        
+        ProgressableHorse progressableHorse = (ProgressableHorse) horse;
+        Progress progress = progressableHorse.betterHorses$getProgress();
+        long totalJumps = progress.getJumpCount();
+
+        double jumpProgress = totalJumps * breed.jumpGrowthMultiplier();
+        jumpProgress = applyObedienceMultiplier(breed.getObedience(), jumpProgress);
+        jumpProgress *= JUMP_XP_MULTIPLIER;
+
+        int level = MIN_LEVEL;
+        for (int i = MIN_LEVEL; i <= MAX_LEVEL; i++) {
+            if (jumpProgress >= getRequiredJumpsForLevel(i)) {
+                level = i;
+            } else {
+                break;
+            }
+        }
+
+        double correctJump = interpolateValue(initialJump, maxJump, level);
+        jumpAccessor.betterHorses$setBaseJumpStrength(correctJump);
+        
+        BetterHorses.LOGGER.info("Восстановлен прыжок лошади {}: уровень {}, прыжок {}",
+            horse.getUuid(), level, correctJump);
     }
 }

@@ -97,7 +97,7 @@ public class HorseStatsHud {
     private static int drawGroupBreed(DrawContext context, TextRenderer renderer, HorseStats s, int x, int y, int line, int lineHeight, BetterHorsesConfig.HudConfig config) {
         if (!config.showBreed) return line;
 
-        context.drawText(renderer, Text.literal("Порода: " + s.breed.displayName()), x, y + lineHeight * line, 0xFFFFFF, false);
+        context.drawText(renderer, Text.literal("Порода: " + s.breed.getDisplayName()), x, y + lineHeight * line, 0xFFFFFF, false);
         line++;
 
         return line;

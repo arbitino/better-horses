@@ -1,5 +1,6 @@
 package net.betterhorses.fabric.mixin;
 
+import net.betterhorses.common.BetterHorses;
 import net.betterhorses.common.breed.BreedableHorse;
 import net.betterhorses.common.breed.Breed;
 
@@ -49,7 +50,7 @@ public abstract class HorseBreedMixin extends AnimalEntity implements BreedableH
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
     private void initBreedDataTracker(DataTracker.Builder builder, CallbackInfo ci) {
-        builder.add(HORSE_BREED, new NbtCompound()); // Пустое значение, порода будет установлена позже
+        builder.add(HORSE_BREED, new NbtCompound());
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
@@ -59,8 +60,16 @@ public abstract class HorseBreedMixin extends AnimalEntity implements BreedableH
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readBreedData(NbtCompound nbt, CallbackInfo ci) {
+        BetterHorses.LOGGER.info("HorseBreedMixin.readBreedData() для лошади " + this.getUuid());
+
         if (nbt.contains(Breed.KEY, NbtElement.COMPOUND_TYPE)) {
-            this.dataTracker.set(HORSE_BREED, nbt.getCompound(Breed.KEY));
+            NbtCompound breedNbt = nbt.getCompound(Breed.KEY);
+            this.dataTracker.set(HORSE_BREED, breedNbt);
+            String breedId = breedNbt.getString("id");
+            
+            BetterHorses.LOGGER.info("Загружена порода из NBT: " + breedId);
+        } else {
+            BetterHorses.LOGGER.info("Breed.KEY не найден в NBT!");
         }
     }
 }

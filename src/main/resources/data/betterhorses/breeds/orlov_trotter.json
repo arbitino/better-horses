@@ -1,0 +1,8 @@
+{
+  "translation_key": "breed.betterhorses.orlov_trotter",
+  "max_jump_height": 5.0,
+  "max_speed": 13.0,
+  "obedience": 2,
+  "speed_growth_multiplier": 1.0,
+  "jump_growth_multiplier": 1.0
+}

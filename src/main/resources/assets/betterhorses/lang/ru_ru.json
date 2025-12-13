@@ -18,5 +18,17 @@
   "text.autoconfig.betterhorses.option.hud.showBaseAttributes": "Показывать базовые атрибуты",
   "text.autoconfig.betterhorses.option.hud.showBaseAttributes.@Tooltip": "Отображать изначальные атрибуты до тренировки",
   "text.autoconfig.betterhorses.option.hud.showTotalProgress": "Показывать общий прогресс",
-  "text.autoconfig.betterhorses.option.hud.showTotalProgress.@Tooltip": "Отображать общую пройденную дистанцию и количество прыжков"
+  "text.autoconfig.betterhorses.option.hud.showTotalProgress.@Tooltip": "Отображать общую пройденную дистанцию и количество прыжков",
+  
+  "breed.betterhorses.default": "Обычная",
+  "breed.betterhorses.arabian": "Арабская",
+  "breed.betterhorses.mustang": "Мустанг",
+  "breed.betterhorses.trakehner": "Тракененская",
+  "breed.betterhorses.orlov_trotter": "Орловский рысак",
+  "breed.betterhorses.vladimir_heavy_breed": "Владимирский тяжеловоз",
+  "breed.betterhorses.akhal_teke": "Ахалтекинская",
+  "breed.betterhorses.friesian": "Фризская",
+  "breed.betterhorses.russian_riding_horse": "Русская верховая",
+  "breed.betterhorses.hanoverian": "Ганноверская",
+  "breed.betterhorses.buddyonny": "Будёновская лошадь"
 }

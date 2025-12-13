@@ -1,10 +1,11 @@
 package net.betterhorses.common.breed;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 
 public record Breed(
         String id,
-        String displayName,
+        String translationKey,
         double maxJumpHeight,
         double maxSpeed,
         ObedienceLevel obedience,
@@ -41,11 +42,14 @@ public record Breed(
         return jumpGrowthMultiplier;
     }
 
-    // Сериализация в NBT
+    public String getDisplayName() {
+        return Text.translatable(translationKey).getString();
+    }
+
     public NbtCompound toNbt() {
         NbtCompound nbt = new NbtCompound();
         nbt.putString("id", id);
-        nbt.putString("displayName", displayName);
+        nbt.putString("translationKey", translationKey);
         nbt.putDouble("maxJumpHeight", maxJumpHeight);
         nbt.putDouble("maxSpeed", maxSpeed);
         nbt.putInt("obedience", obedience.getLevel());
@@ -54,10 +58,20 @@ public record Breed(
         return nbt;
     }
 
-    // Десериализация из NBT
     public static Breed fromNbt(NbtCompound nbt) {
         String id = nbt.getString("id");
-        String displayName = nbt.getString("displayName");
+        String translationKey;
+
+        if (nbt.contains("translationKey")) {
+            translationKey = nbt.getString("translationKey");
+        } else if (nbt.contains("displayName")) {
+            // Fallback для старых сохранений - создаем translation key из старого displayName
+            String oldDisplayName = nbt.getString("displayName");
+            translationKey = "breed." + id.replace(":", ".").toLowerCase();
+        } else {
+            translationKey = "breed.betterhorses.unknown";
+        }
+        
         double maxJumpHeight = nbt.getDouble("maxJumpHeight");
         double maxSpeed = nbt.getDouble("maxSpeed");
         int obedienceLevel = nbt.getInt("obedience");
@@ -70,6 +84,6 @@ public record Breed(
             default -> ObedienceLevel.NORMAL;
         };
 
-        return new Breed(id, displayName, maxJumpHeight, maxSpeed, obedience, speedGrowthMultiplier, jumpGrowthMultiplier);
+        return new Breed(id, translationKey, maxJumpHeight, maxSpeed, obedience, speedGrowthMultiplier, jumpGrowthMultiplier);
     }
 }
