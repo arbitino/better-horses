@@ -3,6 +3,7 @@ package net.betterhorses.common.config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.betterhorses.common.ui.HorseStatsHud;
 
 @Config(name = "betterhorses")
 public class BetterHorsesConfig implements ConfigData {
@@ -12,6 +13,10 @@ public class BetterHorsesConfig implements ConfigData {
     public HudConfig hud = new HudConfig();
     
     public static class HudConfig {
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public HorseStatsHud.HudPosition hudPosition = HorseStatsHud.HudPosition.CENTER_ABOVE_HUD;
+        
         @ConfigEntry.Gui.Tooltip
         public float fontScale = 0.5f;
         
